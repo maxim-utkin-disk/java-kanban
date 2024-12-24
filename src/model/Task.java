@@ -1,3 +1,5 @@
+package model;
+
 import java.util.Objects;
 
 public class Task {
@@ -7,10 +9,9 @@ public class Task {
     private int id;
     protected TaskState status;
 
-    public Task(String name, String description, int id, TaskState status) {
+    public Task(String name, String description, TaskState status) {
         this.name = name;
         this.description = description;
-        this.id = id;
         if (status == null) {
             this.status = TaskState.NEW;
         } else {
@@ -44,6 +45,10 @@ public class Task {
 
     public TaskState getStatus() {
         return status;
+    }
+
+    public void setStatus(TaskState status) {
+        this.status = status;
     }
 
     // в ТЗ просят сравнивать только id

@@ -1,3 +1,5 @@
+package model;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -5,8 +7,8 @@ public class Epic extends Task {
 
     private final ArrayList<Integer> subtaskIdsList;
 
-    public Epic(String name, String description, int id, TaskState status){
-        super(name, description, id, TaskState.NEW);
+    public Epic(String name, String description){
+        super(name, description, TaskState.NEW);
         subtaskIdsList = new ArrayList<>();
     }
 
@@ -32,19 +34,13 @@ public class Epic extends Task {
         }
     }
 
-    public void clearAllSubtasks(HashMap<Integer, Subtask> subtaskList) {
-        for (int i = 0; i < subtaskIdsList.size(); i++) {
-            subtaskList.remove(subtaskIdsList.get(i));
-        }
-        subtaskIdsList.clear();
-        this.status = TaskState.NEW;
-    }
-
-    public void printEpic(HashMap<Integer, Subtask> subtaskList) {
+    public void printEpic(ArrayList<Subtask> subtaskList) {
         System.out.println(this);
         System.out.println("Подзадачи эпика (всего " + subtaskIdsList.size() + " позиций):");
-        for (int i = 0; i < subtaskIdsList.size(); i++) {
-            System.out.println(subtaskList.get(subtaskIdsList.get(i)));
+        for (Subtask s : subtaskList) {
+            if (s.getEpicId() == this.getId())  {
+                System.out.println(s);
+            }
         }
     }
 
@@ -57,15 +53,22 @@ public class Epic extends Task {
                 ", кол-во подзадач = " + subtaskIdsList.size();
     }
 
-    public void actualizeStatus(HashMap<Integer, Subtask> subtaskList) {
+    public void actualizeStatus(ArrayList<Subtask> subtaskList) {
         if (subtaskIdsList.isEmpty()) {
             this.status = TaskState.NEW;
         } else {
             int cntStatusNew = 0;
             int cntStatusDone = 0;
-            for (int i = 0; i < subtaskIdsList.size(); i++) {
-                if (subtaskList.get(subtaskIdsList.get(i)).getStatus() == TaskState.NEW) {cntStatusNew++;}
-                if (subtaskList.get(subtaskIdsList.get(i)).getStatus() == TaskState.DONE) {cntStatusDone++;}
+            for (int i = 0; i < subtaskList.size(); i++) {
+                Subtask s = subtaskList.get(i);
+                if (s.getEpicId() == this.getId()) {
+                    if (s.getStatus() == TaskState.NEW) {
+                        cntStatusNew++;
+                    }
+                    if (s.getStatus() == TaskState.DONE) {
+                        cntStatusDone++;
+                    }
+                }
             }
             if (cntStatusNew == subtaskIdsList.size()) {
                 this.status = TaskState.NEW;
