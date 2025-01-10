@@ -1,11 +1,11 @@
-import utils.TestTaskManager;
+import utils.CheckTaskManager;
 
 public class Main {
 
     public static void main(String[] args) {
         System.out.println("Поехали!");
-        TestTaskManager testTaskMgr = new TestTaskManager();
-        testTaskMgr.testTaskManager();
+        CheckTaskManager testTaskMgr = new CheckTaskManager();
+        testTaskMgr.startChecking();
     }
 
 }
