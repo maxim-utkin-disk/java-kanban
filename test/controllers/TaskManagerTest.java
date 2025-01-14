@@ -22,8 +22,17 @@ class TaskManagerTest {
     static void prepareTestEnv(){
         taskManager = Managers.getDefaultManager();
         assertNotNull(taskManager, "Объект taskManager не готов к работе");
+        assertEquals(0, taskManager.getTaskList().size(),
+                "В только что созданном объекте taskManager непустой список задач");
+        assertEquals(0, taskManager.getSubtaskList().size(),
+                "В только что созданном объекте taskManager непустой список подзадач");
+        assertEquals(0, taskManager.getEpicList().size(),
+                "В только что созданном объекте taskManager непустой список эпиков");
+
         historyManager = Managers.getDefaultHistory();
         assertNotNull(historyManager, "Объект historyManager не готов к работе");
+        assertEquals(0, historyManager.getHistory().size(),
+                "В только что созданном объекте historyManager непустой список просмотров");
     }
 
     @Test

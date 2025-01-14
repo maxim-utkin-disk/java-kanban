@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Epic extends Task {
 
@@ -24,8 +23,7 @@ public class Epic extends Task {
 
     public void deleteSubtaskId(int subtaskId) {
         if (!subtaskIdsList.contains(subtaskId)) {
-            System.out.println("позадача с id = " + subtaskId + " отсутствует в списке подазач эпика id = " +
-                    getId() + ". Удаление подзадачи невозможно.");
+            return;
         }
         for (int i = subtaskIdsList.size() - 1; i >= 0; i--) {
             if (subtaskIdsList.get(i) == subtaskId) {
