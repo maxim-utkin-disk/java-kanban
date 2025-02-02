@@ -11,7 +11,7 @@ public class Managers {
         }
         //чтобы не создавали экземпляр этого класса, использовать только статич.методы
 
-    public static TaskManager getDefaultManager(){
+    public static TaskManager getDefaultManager() {
         return new InMemoryTaskManager();
     }
 
