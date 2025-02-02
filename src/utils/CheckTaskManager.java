@@ -189,7 +189,7 @@ public class CheckTaskManager {
         taskManager.deleteAllEpics();
         printAll();
 
-        System.out.println("-".repeat(46)+"\n\rТестовый прогон программы завершен. Смотрим, что получилось");
+        System.out.println("-".repeat(46) + "\n\rТестовый прогон программы завершен. Смотрим, что получилось");
         printAll();
 
         System.out.println("\n\rВсе!\n\r" + "-".repeat(46));
@@ -256,7 +256,7 @@ public class CheckTaskManager {
         printHistory();
 
         for (Task t : taskManager.getTaskList()) {
-           if (t.getId()%2 == 0) {
+           if (t.getId() % 2 == 0) {
                taskManager.deleteTask(t.getId());
            }
         }
@@ -329,12 +329,12 @@ public class CheckTaskManager {
         System.out.print("Список эпиков (всего " + taskManager.getEpicList().size() + " позиций) ");
         if (isShortMode) {
             System.out.println("(краткий формат):");
-            for(Epic epic : taskManager.getEpicList()) {
+            for (Epic epic : taskManager.getEpicList()) {
                 System.out.println(epic);
             }
         } else {
             System.out.println("(полный формат):");
-            for(Epic epic : taskManager.getEpicList()) {
+            for (Epic epic : taskManager.getEpicList()) {
                 epic.printEpic(taskManager.getSubtaskList());
             }
         }
@@ -350,7 +350,7 @@ public class CheckTaskManager {
 
     public void printHistory() {
         ArrayList<Task> taskHistory = taskManager.getHistory();
-        System.out.println("\n\r" + "-".repeat(10) +" >>> выводим историю просмотров задач:");
+        System.out.println("\n\r" + "-".repeat(10) +  " >>> выводим историю просмотров задач:");
         int i = 0;
         for (Task task : taskHistory) {
             System.out.println(++i + ". " + task);
@@ -358,7 +358,7 @@ public class CheckTaskManager {
         System.out.println("-".repeat(10) + "<<< закончили вывод истории просмотров задач");
     }
 
-    public void checkSubtaskOperation(int resultCode, Subtask s){
+    public void checkSubtaskOperation(int resultCode, Subtask s) {
         // положительные значения resultCode - валидные id, их не анализируем
         if (resultCode == -1) {
             System.out.println("Добавление/обновление подзадачи subtaskId=" + s.getId() +
