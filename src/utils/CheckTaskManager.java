@@ -304,7 +304,7 @@ public class CheckTaskManager {
             return;
         }
         System.out.println("Список задач (всего " + taskManager.getTaskList().size() + " позиций) :");
-        for(Task task : taskManager.getTaskList()) {
+        for (Task task : taskManager.getTaskList()) {
             System.out.println(task);
         }
     }
@@ -316,7 +316,7 @@ public class CheckTaskManager {
         }
         System.out.println("Список подзадач (всего " + taskManager.getSubtaskList().size() +
                 " позиций; это полный перечень без разбивки по эпикам):");
-        for(Subtask subtask : taskManager.getSubtaskList()) {
+        for (Subtask subtask : taskManager.getSubtaskList()) {
             System.out.println(subtask);
         }
     }
