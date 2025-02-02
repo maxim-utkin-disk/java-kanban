@@ -1,6 +1,7 @@
 package controllers;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static model.TaskState.NEW;
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,15 +13,12 @@ import utils.Managers;
 
 import java.util.ArrayList;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-
 class TaskManagerTest {
 
     static TaskManager taskManager;
     static HistoryManager historyManager;
 
     @BeforeAll
-    @Order(0)
     static void prepareTestEnv(){
         taskManager = Managers.getDefaultManager();
         assertNotNull(taskManager, "Объект taskManager не готов к работе");
@@ -38,7 +36,6 @@ class TaskManagerTest {
     }
 
     @Test
-    @Order(1)
     void addTask() {
         Task task = new Task("Test addTask", "Test addTask description", NEW);
         final int taskId = taskManager.addTask(task);
@@ -60,7 +57,6 @@ class TaskManagerTest {
     }
 
     @Test
-    @Order(2)
     void addEpic() {
         Epic epic = new Epic("Test addEpic", "Test addEpic description");
         final int epicId = taskManager.addEpic(epic);
@@ -82,7 +78,6 @@ class TaskManagerTest {
     }
 
     @Test
-    @Order(3)
     void addSubtask() {
         final ArrayList<Epic> epics = taskManager.getEpicList();
         assertEquals(1, epics.size(), "Неверное количество эпиков.");
@@ -106,47 +101,6 @@ class TaskManagerTest {
         assertNotEquals(0,
                 taskManager.getHistory().size(),
                 "После операций с подзадачами (Subtask) история не должна быть пустой!");
-    }
-
-    @Test
-    @Order(4)
-    void allHistorySizeOverThenZero() {
-        assertNotEquals(0,
-                taskManager.getHistory().size(),
-                "После добавления задач, эпиков и подзадач в предыдущих тестах, история не должна быть пустой!");
-    }
-
-    @Test
-    @Order(5)
-    void noRepeatsInHistory() {
-        int task2Id = taskManager.addTask(new Task("Test task 2 name", "Test task 2 descr", NEW));
-        Task task21 = taskManager.getTask(task2Id);
-        Task task22 = taskManager.getTask(task2Id);
-        Task task23 = taskManager.getTask(task2Id);
-
-        int taskRepeatCount = 0;
-        for (Task t : taskManager.getHistory()) {
-            if (t.getId() == task2Id) {taskRepeatCount++;}
-        }
-
-        assertTrue((taskRepeatCount == 1),
-                "В истории просмотров задача должна быть только один раз!");
-    }
-
-    @Test
-    @Order(6)
-    void noTaskInHistoryAfterRemove() {
-        int task3Id = taskManager.addTask(new Task("Test task 3 name", "Test task 3 descr", NEW));
-        Task task3 = taskManager.getTask(task3Id);
-        taskManager.deleteTask(task3Id);
-
-        int taskRepeatCount = 0;
-        for (Task t : taskManager.getHistory()) {
-            if (t.getId() == task3Id) {taskRepeatCount++;}
-        }
-
-        assertTrue((taskRepeatCount == 0),
-                "После удаления задачи ее не должно быть видно в истории!");
     }
 
 }

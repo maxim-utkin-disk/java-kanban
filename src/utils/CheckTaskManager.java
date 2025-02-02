@@ -17,9 +17,9 @@ public class CheckTaskManager {
 
     public void startChecking() {
 
-        System.out.println("-".repeat(46) + "\n\rтрениреуемся с тасками:\n\r1.создать несколько новых");
+        System.out.println("-".repeat(46)+"\n\rтрениреуемся с тасками:\n\r1.создать несколько новых");
 
-        int task1Id = taskManager.addTask(new Task("task1", "ПОмыть машЫну", TaskState.NEW));
+        int task1Id = taskManager.addTask(new Task("task1", "ПОмыть машЫну",  TaskState.NEW));
         int task2Id = taskManager.addTask(new Task("task2", "постирать чехлы сидений", TaskState.IN_PROGRESS));
         int task3Id = taskManager.addTask(new Task("task3", "переобуть колёса", TaskState.DONE));
         printAll();
@@ -33,19 +33,9 @@ public class CheckTaskManager {
         // -- удаление задачи
         taskManager.deleteTask(task2Id);
         // -- пытаемся обновить отсутствующую задачу - то есть добавляем в список
-        Task task4 = new Task("task4", "полировка ЛКП", TaskState.NEW);
+        Task task4 = new Task("task4", "полировка ЛКП",  TaskState.NEW);
         task4.setId(taskManager.getId());
         taskManager.updateTask(task4);
-        // --
-        // -- тренируем историю
-        Task task41 = taskManager.getTask(task4.getId());
-        Task task11 = taskManager.getTask(task1.getId());
-        Task task21 = taskManager.getTask(task2Id);
-        Task task31 = taskManager.getTask(task3Id);
-        Task task42 = taskManager.getTask(task4.getId());
-        Task task12 = taskManager.getTask(task1.getId());
-        Task task22 = taskManager.getTask(task2Id);
-        Task task32 = taskManager.getTask(task3Id);
         // --
         printAll();
 
@@ -55,7 +45,7 @@ public class CheckTaskManager {
 
         System.out.println("\n\rтренировку с тасками закончили");
 
-        System.out.println("-".repeat(46) + "\n\r\n\rтрениреуемся с эпиками и подзадачами:\n\r1.создать несколько новых");
+        System.out.println("-".repeat(46)+"\n\r\n\rтрениреуемся с эпиками и подзадачами:\n\r1.создать несколько новых");
         int epic1Id = taskManager.addEpic(new Epic("epic1", "купить продуктов"));
 
         Subtask subtask11 = new Subtask("subtask1_1", "купить хлеба", epic1Id, TaskState.NEW);
@@ -189,114 +179,12 @@ public class CheckTaskManager {
         taskManager.deleteAllEpics();
         printAll();
 
-        System.out.println("-".repeat(46) + "\n\rТестовый прогон программы завершен. Смотрим, что получилось");
+        System.out.println("-".repeat(46)+"\n\rТестовый прогон программы завершен. Смотрим, что получилось");
         printAll();
 
         System.out.println("\n\rВсе!\n\r" + "-".repeat(46));
 
     }
-
-    public void startCheckingDoublyLinkedList() {
-
-        System.out.println("-".repeat(46) + "\n\rтренировка с двусвязным списком");
-
-        int task1Id = taskManager.addTask(new Task("task1", "помыть машину", TaskState.NEW));
-        int task2Id = taskManager.addTask(new Task("task2", "постирать чехлы сидений", TaskState.IN_PROGRESS));
-        int task3Id = taskManager.addTask(new Task("task3", "переобуть колёса", TaskState.DONE));
-        int task4Id = taskManager.addTask(new Task("task4", "купить в леруа новые водосчетчики", TaskState.NEW));
-        int task5Id = taskManager.addTask(new Task("task5", "вызвать слесаря для замены водосчетчиков", TaskState.IN_PROGRESS));
-        int task6Id = taskManager.addTask(new Task("task6", "отпроситься на работе для замены водосчетиков", TaskState.DONE));
-        int task7Id = taskManager.addTask(new Task("task7", "купить в леруа столярный клей", TaskState.NEW));
-        int task8Id = taskManager.addTask(new Task("task8", "найти наждачку", TaskState.NEW));
-        int task9Id = taskManager.addTask(new Task("task9", "разобрать расшатанные стулья", TaskState.NEW));
-        int task10Id = taskManager.addTask(new Task("task10", "зачистить расшатанные стулья", TaskState.NEW));
-        int task11Id = taskManager.addTask(new Task("task11", "склеить расшатанные стулья", TaskState.NEW));
-        int task12Id = taskManager.addTask(new Task("task12", "собрать склеенные стулья", TaskState.NEW));
-
-        Task task121 = taskManager.getTask(task12Id);
-        Task task111 = taskManager.getTask(task11Id);
-        Task task101 = taskManager.getTask(task10Id);
-        Task task91 = taskManager.getTask(task9Id);
-        Task task81 = taskManager.getTask(task8Id);
-        Task task71 = taskManager.getTask(task7Id);
-        Task task61 = taskManager.getTask(task6Id);
-        Task task51 = taskManager.getTask(task5Id);
-        Task task41 = taskManager.getTask(task4Id);
-        Task task31 = taskManager.getTask(task3Id);
-        Task task21 = taskManager.getTask(task2Id);
-        Task task11 = taskManager.getTask(task1Id);
-
-        Task task122 = taskManager.getTask(task12Id);
-        Task task112 = taskManager.getTask(task11Id);
-        Task task102 = taskManager.getTask(task10Id);
-        Task task92 = taskManager.getTask(task9Id);
-        Task task82 = taskManager.getTask(task8Id);
-        Task task72 = taskManager.getTask(task7Id);
-        Task task62 = taskManager.getTask(task6Id);
-        Task task52 = taskManager.getTask(task5Id);
-        Task task42 = taskManager.getTask(task4Id);
-        Task task32 = taskManager.getTask(task3Id);
-        Task task22 = taskManager.getTask(task2Id);
-        Task task12 = taskManager.getTask(task1Id);
-
-        Task task13 = taskManager.getTask(task1Id);
-        Task task23 = taskManager.getTask(task2Id);
-        Task task33 = taskManager.getTask(task3Id);
-        Task task43 = taskManager.getTask(task4Id);
-        Task task53 = taskManager.getTask(task5Id);
-        Task task63 = taskManager.getTask(task6Id);
-        Task task73 = taskManager.getTask(task7Id);
-        Task task83 = taskManager.getTask(task8Id);
-        Task task93 = taskManager.getTask(task9Id);
-        Task task103 = taskManager.getTask(task10Id);
-        Task task113 = taskManager.getTask(task11Id);
-        Task task123 = taskManager.getTask(task12Id);
-
-        System.out.print("\n\r - история после добавления 12-ти задач и запроса их несколько раз:");
-        printHistory();
-
-        for (Task t : taskManager.getTaskList()) {
-           if (t.getId() % 2 == 0) {
-               taskManager.deleteTask(t.getId());
-           }
-        }
-        Task task124 = taskManager.getTask(task12Id);
-        Task task24 = taskManager.getTask(task2Id);
-        Task task104 = taskManager.getTask(task10Id);
-        Task task44 = taskManager.getTask(task4Id);
-        Task task84 = taskManager.getTask(task8Id);
-        Task task64 = taskManager.getTask(task6Id);
-
-        System.out.print("\n\r - история после удаления задач с четными id и запроса оставшихся в произвольном порядке:");
-        printHistory();
-
-        int epic1Id = taskManager.addEpic(new Epic("epic1", "Самоподготовка"));
-        int subtask1Id = taskManager.addSubtask(new Subtask("subtask1", "освоить Java", epic1Id, TaskState.IN_PROGRESS));
-        int subtask2Id = taskManager.addSubtask(new Subtask("subtask2", "переучиться с Oracle на Postgres", epic1Id, TaskState.IN_PROGRESS));
-        int subtask3Id = taskManager.addSubtask(new Subtask("subtask3", "вспомнить основы работы в *NIX", epic1Id, TaskState.NEW));
-        int subtask4Id = taskManager.addSubtask(new Subtask("subtask3", "разобраться с ЭП и сертификатами", epic1Id, TaskState.NEW));
-
-        int epic2Id = taskManager.addEpic(new Epic("epic2", "начать тихо искать новую работу, чтобы нынешние не заметили :-)"));
-
-        Epic e2 = taskManager.getEpic(epic2Id);
-        Subtask s4 = taskManager.getSubtask(subtask4Id);
-        Subtask s1 = taskManager.getSubtask(subtask1Id);
-        Epic e1 = taskManager.getEpic(epic1Id);
-        Subtask s2 = taskManager.getSubtask(subtask2Id);
-        Subtask s3 = taskManager.getSubtask(subtask3Id);
-
-        System.out.print("\n\r - история после добавления эпиков и подзадач в произвольном порядке:");
-        printHistory();
-
-        taskManager.deleteEpic(e1);
-        System.out.print("\n\r - история после удаления эпика с подзадачами:");
-        printHistory();
-
-    }
-
-
-
-
 
     public void printTasks() {
         if (taskManager.getTaskList().isEmpty()) {
@@ -304,7 +192,7 @@ public class CheckTaskManager {
             return;
         }
         System.out.println("Список задач (всего " + taskManager.getTaskList().size() + " позиций) :");
-        for (Task task : taskManager.getTaskList()) {
+        for(Task task : taskManager.getTaskList()) {
             System.out.println(task);
         }
     }
@@ -316,7 +204,7 @@ public class CheckTaskManager {
         }
         System.out.println("Список подзадач (всего " + taskManager.getSubtaskList().size() +
                 " позиций; это полный перечень без разбивки по эпикам):");
-        for (Subtask subtask : taskManager.getSubtaskList()) {
+        for(Subtask subtask : taskManager.getSubtaskList()) {
             System.out.println(subtask);
         }
     }
@@ -329,12 +217,12 @@ public class CheckTaskManager {
         System.out.print("Список эпиков (всего " + taskManager.getEpicList().size() + " позиций) ");
         if (isShortMode) {
             System.out.println("(краткий формат):");
-            for (Epic epic : taskManager.getEpicList()) {
+            for(Epic epic : taskManager.getEpicList()) {
                 System.out.println(epic);
             }
         } else {
             System.out.println("(полный формат):");
-            for (Epic epic : taskManager.getEpicList()) {
+            for(Epic epic : taskManager.getEpicList()) {
                 epic.printEpic(taskManager.getSubtaskList());
             }
         }
@@ -350,7 +238,7 @@ public class CheckTaskManager {
 
     public void printHistory() {
         ArrayList<Task> taskHistory = taskManager.getHistory();
-        System.out.println("\n\r" + "-".repeat(10) +  " >>> выводим историю просмотров задач:");
+        System.out.println("\n\r" + "-".repeat(10) +" >>> выводим историю просмотров задач:");
         int i = 0;
         for (Task task : taskHistory) {
             System.out.println(++i + ". " + task);
@@ -358,7 +246,7 @@ public class CheckTaskManager {
         System.out.println("-".repeat(10) + "<<< закончили вывод истории просмотров задач");
     }
 
-    public void checkSubtaskOperation(int resultCode, Subtask s) {
+    public void checkSubtaskOperation(int resultCode, Subtask s){
         // положительные значения resultCode - валидные id, их не анализируем
         if (resultCode == -1) {
             System.out.println("Добавление/обновление подзадачи subtaskId=" + s.getId() +
