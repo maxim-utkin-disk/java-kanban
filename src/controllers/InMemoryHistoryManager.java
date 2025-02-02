@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InMemoryHistoryManager implements HistoryManager{
+public class InMemoryHistoryManager implements HistoryManager {
 
     private final Map<Integer, Node> nodeMap;
     private Node first;
@@ -22,7 +22,7 @@ public class InMemoryHistoryManager implements HistoryManager{
 
 
     @Override
-    public void add(Task task){
+    public void add(Task task) {
         if (task == null) {
             return; // пустой объект в историю просмотров не добавляем
         }
@@ -32,7 +32,7 @@ public class InMemoryHistoryManager implements HistoryManager{
     }
 
     @Override
-    public ArrayList<Task> getHistory(){
+    public ArrayList<Task> getHistory() {
         return getTasks();
     }
 
@@ -53,7 +53,9 @@ public class InMemoryHistoryManager implements HistoryManager{
     }
 
     private void removeNode(Node node) {
-        if (node == null) {return;}
+        if (node == null) {
+            return;
+        }
 
         if (node == first) {
             if (node.next != null) {
@@ -77,8 +79,12 @@ public class InMemoryHistoryManager implements HistoryManager{
 
     private void linkLast(Task task) {
         final Node node = new Node(task, last, null);
-        if (first == null) {first = node;}
-        if (last != null) {last.next = node;}
+        if (first == null) {
+            first = node;
+        }
+        if (last != null) {
+            last.next = node;
+        }
         last = node;
     }
 
@@ -93,8 +99,7 @@ public class InMemoryHistoryManager implements HistoryManager{
                 } else {
                     node = null;
                 }
-            }
-            while (node != null);
+            } while (node != null);
         }
         return tasks;
     }
