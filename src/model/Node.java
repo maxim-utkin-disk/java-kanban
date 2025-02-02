@@ -11,7 +11,7 @@ public class Node {
         this.next = next;
     }
 
-    public String toString(){
+    public String toString() {
         return "Узел id = " + this.task.getId()
                 + ", тип = " + this.task.getClass().getName()
                 + ", наименование = " + this.task.getName();
