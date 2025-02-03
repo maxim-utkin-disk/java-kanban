@@ -149,4 +149,29 @@ class TaskManagerTest {
                 "После удаления задачи ее не должно быть видно в истории!");
     }
 
+    /*
+    По замечанию тестирования от пн.03.02.2025 возникла путаница: либо я не так Вас понял, либо Вы не в том
+    методе поставили замечание. В коде метода InMemoryTaskManager.deleteAllEpics *уже* было реализовано удаление
+    из истории всех эпиков и всех подзадач - см цикл for, который, проходя по epicList-у, вызывает удаление
+    всех эпиков из истории. А при удалении эпика (через рекурсивный вызов) удаляются все подзадачи данного эпика.
+    Для доказательства, что все работает именно так, добавил сюда 7й тест - см ниже: после вызова
+    метода InMemoryTaskManager.deleteAllEpics в истории не остается ни эпиков, ни подзадач.
+    С уважением, Максим Уткин.
+     */
+    @Test
+    @Order(7)
+    void noEpicsAndSubtasksInHistoryAfterRemoveAllEpics() {
+        taskManager.deleteAllEpics();
+
+        int epicsCount = 0;
+        int subtasksCount = 0;
+        for (Task t : taskManager.getHistory()) {
+            if (t instanceof Epic) {epicsCount++;}
+            if (t instanceof Subtask) {subtasksCount++;}
+        }
+
+        assertTrue(((epicsCount == 0) && (subtasksCount == 0)),
+                "После удаления всех эпиков в истории не должно остаться ни одного эпика, ни  одной подзадачи!");
+    }
+
 }
