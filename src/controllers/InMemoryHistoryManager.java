@@ -1,7 +1,5 @@
 package controllers;
 
-import model.Epic;
-import model.Node;
 import model.Task;
 
 import java.util.ArrayList;
@@ -42,13 +40,14 @@ public class InMemoryHistoryManager implements HistoryManager {
             final Node node = nodeMap.get(id);
             removeNode(node);
             nodeMap.remove(id);
+            /* @avfyodorov, перенес в Менеджер задач, в метод удаления эпика
             // при удалении из истории эпика, удалим историю его подзадач
             if (node.task instanceof Epic) {
                 Epic e = (Epic)node.task;
                 for (int subtaskId : e.getSubtaskIdsList()) {
                     remove(subtaskId);
                 }
-            }
+            }*/
         }
     }
 
@@ -90,18 +89,31 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private ArrayList<Task> getTasks() {
         ArrayList<Task> tasks = new ArrayList<>();
-        if (first != null) {
-            Node node = first;
-            do {
-                tasks.add(node.task);
-                if (node.next != null) {
-                    node = node.next;
-                } else {
-                    node = null;
-                }
-            } while (node != null);
+        //@avfyodorov, спасибо большое за подсказку! действительно, перемудрил.
+        Node node = first;
+        while (node != null) {
+            tasks.add(node.task);
+            node = node.next;
         }
         return tasks;
     }
 
+    public static class Node {
+        public Task task;
+        public Node prev;
+        public Node next;
+
+        public Node(Task task, Node prev, Node next) {
+            this.task = task;
+            this.prev = prev;
+            this.next = next;
+        }
+
+        public String toString() {
+            return "Узел id = " + this.task.getId()
+                    + ", тип = " + this.task.getClass().getName()
+                    + ", наименование = " + this.task.getName();
+        }
+
+    }
 }

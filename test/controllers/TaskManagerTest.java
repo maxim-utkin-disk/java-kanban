@@ -174,4 +174,42 @@ class TaskManagerTest {
                 "После удаления всех эпиков в истории не должно остаться ни одного эпика, ни  одной подзадачи!");
     }
 
+    @Test
+    @Order(8)
+    void testDeleteEpic() {
+        int epic1Id = taskManager.addEpic(new Epic("epic1-test8", "description of epic1-test8"));
+        int subtask1Id = taskManager.addSubtask(new Subtask("epic1-test8-subtask1",
+                "description epic1-test8-subtask1", epic1Id, NEW));
+        int subtask2Id = taskManager.addSubtask(new Subtask("epic1-test8-subtask2",
+                "description epic1-test8-subtask2", epic1Id, NEW));
+
+        Subtask s21 = taskManager.getSubtask(subtask2Id);
+        Epic e11 = taskManager.getEpic(epic1Id);
+        Subtask s22 = taskManager.getSubtask(subtask2Id);
+        Epic e12 = taskManager.getEpic(epic1Id);
+        Subtask s11 = taskManager.getSubtask(subtask1Id);
+        Epic e13 = taskManager.getEpic(epic1Id);
+        Subtask s12 = taskManager.getSubtask(subtask1Id);
+
+        /*System.out.println("История просмотров до удаления: ");
+        for (Task t : taskManager.getHistory()) {
+            System.out.println(t);
+        }*/
+        taskManager.deleteEpic(e11);
+        /*System.out.println("История просмотров после удаления: ");
+        for (Task t : taskManager.getHistory()) {
+            System.out.println(t);
+        }*/
+        int epicsCount = 0;
+        int subtasksCount = 0;
+        for (Task t : taskManager.getHistory()) {
+            if (t instanceof Epic) {epicsCount++;}
+            if (t instanceof Subtask) {subtasksCount++;}
+        }
+
+        assertTrue(((epicsCount == 0) && (subtasksCount == 0)),
+                "После удаления всех эпиков в истории не должно остаться ни одного эпика, ни  одной подзадачи!");
+    }
+
+
 }
