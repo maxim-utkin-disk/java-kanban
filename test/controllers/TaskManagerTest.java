@@ -149,4 +149,67 @@ class TaskManagerTest {
                 "После удаления задачи ее не должно быть видно в истории!");
     }
 
+    /*
+    По замечанию тестирования от пн.03.02.2025 возникла путаница: либо я не так Вас понял, либо Вы не в том
+    методе поставили замечание. В коде метода InMemoryTaskManager.deleteAllEpics *уже* было реализовано удаление
+    из истории всех эпиков и всех подзадач - см цикл for, который, проходя по epicList-у, вызывает удаление
+    всех эпиков из истории. А при удалении эпика (через рекурсивный вызов) удаляются все подзадачи данного эпика.
+    Для доказательства, что все работает именно так, добавил сюда 7й тест - см ниже: после вызова
+    метода InMemoryTaskManager.deleteAllEpics в истории не остается ни эпиков, ни подзадач.
+    С уважением, Максим Уткин.
+     */
+    @Test
+    @Order(7)
+    void noEpicsAndSubtasksInHistoryAfterRemoveAllEpics() {
+        taskManager.deleteAllEpics();
+
+        int epicsCount = 0;
+        int subtasksCount = 0;
+        for (Task t : taskManager.getHistory()) {
+            if (t instanceof Epic) {epicsCount++;}
+            if (t instanceof Subtask) {subtasksCount++;}
+        }
+
+        assertTrue(((epicsCount == 0) && (subtasksCount == 0)),
+                "После удаления всех эпиков в истории не должно остаться ни одного эпика, ни  одной подзадачи!");
+    }
+
+    @Test
+    @Order(8)
+    void testDeleteEpic() {
+        int epic1Id = taskManager.addEpic(new Epic("epic1-test8", "description of epic1-test8"));
+        int subtask1Id = taskManager.addSubtask(new Subtask("epic1-test8-subtask1",
+                "description epic1-test8-subtask1", epic1Id, NEW));
+        int subtask2Id = taskManager.addSubtask(new Subtask("epic1-test8-subtask2",
+                "description epic1-test8-subtask2", epic1Id, NEW));
+
+        Subtask s21 = taskManager.getSubtask(subtask2Id);
+        Epic e11 = taskManager.getEpic(epic1Id);
+        Subtask s22 = taskManager.getSubtask(subtask2Id);
+        Epic e12 = taskManager.getEpic(epic1Id);
+        Subtask s11 = taskManager.getSubtask(subtask1Id);
+        Epic e13 = taskManager.getEpic(epic1Id);
+        Subtask s12 = taskManager.getSubtask(subtask1Id);
+
+        /*System.out.println("История просмотров до удаления: ");
+        for (Task t : taskManager.getHistory()) {
+            System.out.println(t);
+        }*/
+        taskManager.deleteEpic(e11);
+        /*System.out.println("История просмотров после удаления: ");
+        for (Task t : taskManager.getHistory()) {
+            System.out.println(t);
+        }*/
+        int epicsCount = 0;
+        int subtasksCount = 0;
+        for (Task t : taskManager.getHistory()) {
+            if (t instanceof Epic) {epicsCount++;}
+            if (t instanceof Subtask) {subtasksCount++;}
+        }
+
+        assertTrue(((epicsCount == 0) && (subtasksCount == 0)),
+                "После удаления всех эпиков в истории не должно остаться ни одного эпика, ни  одной подзадачи!");
+    }
+
+
 }
