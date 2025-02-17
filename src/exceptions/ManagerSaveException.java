@@ -1,7 +1,7 @@
-package controllers;
+package exceptions;
 
 // Создаем собственное исключение
-class ManagerSaveException extends RuntimeException {
+public class ManagerSaveException extends RuntimeException {
     public ManagerSaveException(String message) {
         super(message);
     }

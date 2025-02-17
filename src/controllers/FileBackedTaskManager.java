@@ -1,5 +1,6 @@
 package controllers;
 
+import exceptions.ManagerSaveException;
 import model.Epic;
 import model.Subtask;
 import model.Task;
@@ -86,14 +87,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 taskManager.setActualId(++maxUsedId);
 
             } catch (IOException e) {
-                System.out.println("Произошла ошибка во время чтения файла " + file.getName());
+                //System.out.println("Произошла ошибка во время чтения файла " + file.getName());
+                throw new ManagerSaveException("Произошла ошибка во время чтения файла "
+                        + file.getName() + ": " + e.getMessage());
             }
         }
 
         return taskManager;
     }
 
-    protected void save() throws ManagerSaveException {
+    protected void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
             writer.write("id,type,name,status,description,epic");
             writer.newLine();
@@ -122,7 +125,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public Task getTask(int id) {
         final Task task = super.getTask(id);
-        save();
+        //save(); // убрал. И здесь, и в getEpic, и в getSubtask
         return task;
     }
 
@@ -162,7 +165,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public Epic getEpic(int epicId) {
         final Epic epic = super.getEpic(epicId);
-        save();
+        //save();
         return epic;
     }
 
@@ -199,7 +202,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public Subtask getSubtask(int subtaskId) {
         final Subtask subtask = super.getSubtask(subtaskId);
-        save();
+        //save();
         return subtask;
     }
 
