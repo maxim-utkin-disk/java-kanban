@@ -224,7 +224,7 @@ public class InMemoryTaskManager implements TaskManager {
         id = actualId;
     }
 
-    protected TaskType getTaskTypeById (int id) {
+    protected TaskType getTaskTypeById(int id) {
         if (taskList.containsKey(id)) {
             return TaskType.TASK;
         } else if (epicList.containsKey(id)) {
