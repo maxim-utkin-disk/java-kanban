@@ -12,13 +12,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-// Создаем собственное исключение
-class ManagerSaveException extends RuntimeException {
-    public ManagerSaveException(String message) {
-        super(message);
-    }
-}
-
 // менеджжер задач с сохранением в файл
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
@@ -36,7 +29,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    public static FileBackedTaskManager loadFromFile (File file) {
+    public static FileBackedTaskManager loadFromFile(File file) {
         final FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
         if (!file.exists()) {
             // на случай певрого запуска или когда указанный файл не найден,
@@ -93,7 +86,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 taskManager.setActualId(++maxUsedId);
 
             } catch (IOException e) {
-                System.out.println("Произошла ошибка во время чтения файла "+ file.getName());
+                System.out.println("Произошла ошибка во время чтения файла " + file.getName());
             }
         }
 
@@ -101,7 +94,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     protected void save() throws ManagerSaveException {
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
             writer.write("id,type,name,status,description,epic");
             writer.newLine();
             for (Task t : getTaskList()) {
@@ -134,7 +127,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public int addTask (Task task) {
+    public int addTask(Task task) {
         final int id = super.addTask(task);
         save();
         return id;
@@ -143,7 +136,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     // методы addRestored*** - для записи восстановленных задач в память.
     // если использовать обычные методы add***, то каждый раз будет дергаться запись в файл.
     // А зачем это надо?
-    public void addRestoredTask (Task task) {
+    public void addRestoredTask(Task task) {
         final int id = super.addTask(task);
     }
 
@@ -180,7 +173,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return id;
     }
 
-    public void addRestoredEpic (Epic epic) {
+    public void addRestoredEpic(Epic epic) {
         final int id = super.addEpic(epic);
     }
 
@@ -217,7 +210,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return id;
     }
 
-    public void addRestoredSubtask (Subtask subtask) {
+    public void addRestoredSubtask(Subtask subtask) {
         final int id = super.addSubtask(subtask);
     }
 
