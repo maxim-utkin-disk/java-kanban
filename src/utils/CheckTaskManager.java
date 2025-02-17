@@ -1,10 +1,8 @@
 package utils;
 
+import controllers.HistoryManager;
 import controllers.TaskManager;
-import model.Epic;
-import model.Subtask;
-import model.Task;
-import model.TaskState;
+import model.*;
 
 import java.util.ArrayList;
 
@@ -294,9 +292,97 @@ public class CheckTaskManager {
 
     }
 
+    public void startCheckingFileManager() {
+        System.out.println("-".repeat(46) + "\n\rтренировка с файловым менеджером");
+        System.out.println("Эти данные восстановлены из файла");
+        printAll();
 
+        int task1Id = taskManager.addTask(new Task("task1", "помыть машину", TaskState.NEW));
+        int task2Id = taskManager.addTask(new Task("task2", "постирать чехлы сидений", TaskState.IN_PROGRESS));
+        int task3Id = taskManager.addTask(new Task("task3", "переобуть колёса", TaskState.DONE));
+        int task4Id = taskManager.addTask(new Task("task4", "купить в леруа новые водосчетчики", TaskState.NEW));
+        int task5Id = taskManager.addTask(new Task("task5", "вызвать слесаря для замены водосчетчиков", TaskState.IN_PROGRESS));
+        int task6Id = taskManager.addTask(new Task("task6", "отпроситься на работе для замены водосчетиков", TaskState.DONE));
+        int task7Id = taskManager.addTask(new Task("task7", "купить в леруа столярный клей", TaskState.NEW));
+        int task8Id = taskManager.addTask(new Task("task8", "найти наждачку", TaskState.NEW));
+        int task9Id = taskManager.addTask(new Task("task9", "разобрать расшатанные стулья", TaskState.NEW));
+        int task10Id = taskManager.addTask(new Task("task10", "зачистить расшатанные стулья", TaskState.NEW));
+        int task11Id = taskManager.addTask(new Task("task11", "склеить расшатанные стулья", TaskState.NEW));
+        int task12Id = taskManager.addTask(new Task("task12", "собрать склеенные стулья", TaskState.NEW));
 
+        Task task121 = taskManager.getTask(task12Id);
+        Task task111 = taskManager.getTask(task11Id);
+        Task task101 = taskManager.getTask(task10Id);
+        Task task91 = taskManager.getTask(task9Id);
+        Task task81 = taskManager.getTask(task8Id);
+        Task task71 = taskManager.getTask(task7Id);
+        Task task61 = taskManager.getTask(task6Id);
+        Task task51 = taskManager.getTask(task5Id);
+        Task task41 = taskManager.getTask(task4Id);
+        Task task31 = taskManager.getTask(task3Id);
+        Task task21 = taskManager.getTask(task2Id);
+        Task task11 = taskManager.getTask(task1Id);
 
+        Task task122 = taskManager.getTask(task12Id);
+        Task task112 = taskManager.getTask(task11Id);
+        Task task102 = taskManager.getTask(task10Id);
+        Task task92 = taskManager.getTask(task9Id);
+        Task task82 = taskManager.getTask(task8Id);
+        Task task72 = taskManager.getTask(task7Id);
+        Task task62 = taskManager.getTask(task6Id);
+        Task task52 = taskManager.getTask(task5Id);
+        Task task42 = taskManager.getTask(task4Id);
+        Task task32 = taskManager.getTask(task3Id);
+        Task task22 = taskManager.getTask(task2Id);
+        Task task12 = taskManager.getTask(task1Id);
+
+        Task task13 = taskManager.getTask(task1Id);
+        Task task23 = taskManager.getTask(task2Id);
+        Task task33 = taskManager.getTask(task3Id);
+        Task task43 = taskManager.getTask(task4Id);
+        Task task53 = taskManager.getTask(task5Id);
+        Task task63 = taskManager.getTask(task6Id);
+        Task task73 = taskManager.getTask(task7Id);
+        Task task83 = taskManager.getTask(task8Id);
+        Task task93 = taskManager.getTask(task9Id);
+        Task task103 = taskManager.getTask(task10Id);
+        Task task113 = taskManager.getTask(task11Id);
+        Task task123 = taskManager.getTask(task12Id);
+
+        /*for (Task t : taskManager.getTaskList()) {
+            if (t.getId() % 2 == 0) {
+                taskManager.deleteTask(t.getId());
+            }
+        }*/
+
+        Task task124 = taskManager.getTask(task12Id);
+        Task task24 = taskManager.getTask(task2Id);
+        Task task104 = taskManager.getTask(task10Id);
+        Task task44 = taskManager.getTask(task4Id);
+        Task task84 = taskManager.getTask(task8Id);
+        Task task64 = taskManager.getTask(task6Id);
+
+        int epic1Id = taskManager.addEpic(new Epic("epic1", "Самоподготовка"));
+        int subtask1Id = taskManager.addSubtask(new Subtask("subtask1", "освоить Java", epic1Id, TaskState.IN_PROGRESS));
+        int subtask2Id = taskManager.addSubtask(new Subtask("subtask2", "переучиться с Oracle на Postgres", epic1Id, TaskState.IN_PROGRESS));
+        int subtask3Id = taskManager.addSubtask(new Subtask("subtask3", "вспомнить основы работы в *NIX", epic1Id, TaskState.NEW));
+        int subtask4Id = taskManager.addSubtask(new Subtask("subtask3", "разобраться с ЭП и сертификатами", epic1Id, TaskState.NEW));
+
+        int epic2Id = taskManager.addEpic(new Epic("epic2", "начать тихо искать новую работу, чтобы нынешние не заметили :-)"));
+
+        Epic e2 = taskManager.getEpic(epic2Id);
+        Subtask s4 = taskManager.getSubtask(subtask4Id);
+        Subtask s1 = taskManager.getSubtask(subtask1Id);
+        Epic e1 = taskManager.getEpic(epic1Id);
+        Subtask s2 = taskManager.getSubtask(subtask2Id);
+        Subtask s3 = taskManager.getSubtask(subtask3Id);
+
+        System.out.println("=".repeat(46) + "\n\rЭти данные - после тестового прогона");
+        printAll();
+
+        System.out.println("=".repeat(46) + "\n\rтренировка с файловым менеджером закончена");
+
+    }
 
     public void printTasks() {
         if (taskManager.getTaskList().isEmpty()) {
@@ -369,4 +455,5 @@ public class CheckTaskManager {
                     ", name=" + s.getName() + ", description=" + s.getDescription() + ", epicId=" + s.getEpicId());
         }
     }
+
 }

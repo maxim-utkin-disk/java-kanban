@@ -24,4 +24,8 @@ public class Subtask extends Task {
                 ", Статус = " + getStatus().toString() +
                 ", epicId = " + epicId;
     }
+
+    public TaskType getTaskType() {
+        return TaskType.SUBTASK;
+    }
 }

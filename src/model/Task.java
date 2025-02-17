@@ -17,6 +17,7 @@ public class Task {
         } else {
             this.status = status;
         }
+        this.id = -1;
     }
 
     public String getName() {
@@ -72,5 +73,9 @@ public class Task {
                 ", Наименование = " + name +
                 ", Описание = " + description +
                 ", Статус = " + status.toString();
+    }
+
+    public TaskType getTaskType() {
+        return TaskType.TASK;
     }
 }

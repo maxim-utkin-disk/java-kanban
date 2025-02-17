@@ -78,4 +78,8 @@ public class Epic extends Task {
         }
     }
 
+    public TaskType getTaskType() {
+        return TaskType.EPIC;
+    }
+
 }
