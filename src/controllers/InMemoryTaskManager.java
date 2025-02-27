@@ -3,6 +3,7 @@ package controllers;
 import model.Epic;
 import model.Subtask;
 import model.Task;
+import model.TaskType;
 import utils.Managers;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     private static int id;
 
-    private final HistoryManager historyMgr;
+    protected final HistoryManager historyMgr;
 
 
     public InMemoryTaskManager() {
@@ -58,7 +59,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int addTask(Task task) {
-        task.setId(getId());
+        if (task.getId() == -1) {
+            task.setId(this.getId());
+        }
         taskList.put(task.getId(), task);
         return task.getId();
     }
@@ -96,7 +99,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int addEpic(Epic epic) {
-        epic.setId(getId());
+        if (epic.getId() == -1) {
+            epic.setId(this.getId());
+        }
         epicList.put(epic.getId(), epic);
         return epic.getId();
     }
@@ -145,7 +150,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (!epicList.containsKey(subtask.getEpicId())) {
             return -1;
         } else {
-            subtask.setId(getId());
+            if (subtask.getId() == -1) {
+                subtask.setId(this.getId());
+            }
             subtaskList.put(subtask.getId(), subtask);
             epicList.get(subtask.getEpicId()).addSubtaskId(subtask.getId());
             epicList.get(subtask.getEpicId()).actualizeStatus(getSubtaskList());
@@ -211,6 +218,22 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public ArrayList<Task> getHistory() {
         return historyMgr.getHistory();
+    }
+
+    protected void setActualId(int actualId) {
+        id = actualId;
+    }
+
+    protected TaskType getTaskTypeById(int id) {
+        if (taskList.containsKey(id)) {
+            return TaskType.TASK;
+        } else if (epicList.containsKey(id)) {
+            return TaskType.EPIC;
+        } else if (subtaskList.containsKey(id)) {
+            return TaskType.SUBTASK;
+        } else {
+            return null;
+        }
     }
 
 }
