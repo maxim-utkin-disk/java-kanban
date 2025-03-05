@@ -2,7 +2,12 @@ package utils;
 
 import model.*;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import static utils.GlobalSettings.DATETIME_FORMAT_PATTERN;
 
 public class CSVTaskFormat {
 
@@ -12,12 +17,19 @@ public class CSVTaskFormat {
         result.append(task.getTaskType() + ",");
         result.append(task.getName() + ",");
         result.append(task.getStatus() + ",");
-        result.append(task.getDescription());
-
+        result.append(task.getDescription() + ",");
         if (task.getTaskType() == TaskType.SUBTASK) {
-            result.append("," + ((Subtask)task).getEpicId());
+            result.append(((Subtask)task).getEpicId() + ",");
         }
+        if (task.getTaskType() != TaskType.EPIC) {
+            if (task.getStartTime() != null) {
+                result.append(task.getStartTime().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)) + ",");
+            }
+            if (task.getDuration() != null) {
+                result.append(task.getDuration().toMinutes());
+            }
 
+        }
         return result.toString();
     }
 
@@ -41,7 +53,9 @@ public class CSVTaskFormat {
         final TaskType taskType = TaskType.valueOf(values[1]);
         final TaskState taskState = TaskState.valueOf(values[3]);
         if (taskType == TaskType.TASK) {
-            Task result = new Task(values[2], values[4], taskState);
+            Task result = new Task(values[2], values[4], taskState,
+                    LocalDateTime.parse(values[5], DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                    Duration.ofMinutes(Long.parseLong(values[6])));
             result.setId(id);
             return result;
         } else if (taskType == TaskType.EPIC) {
@@ -50,7 +64,9 @@ public class CSVTaskFormat {
             return result;
         } else if (taskType == TaskType.TASK.SUBTASK) {
             final int epicId = Integer.parseInt(values[5]);
-            Subtask result = new Subtask(values[2], values[4], epicId, taskState);
+            Subtask result = new Subtask(values[2], values[4], epicId, taskState,
+                    LocalDateTime.parse(values[6], DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                    Duration.ofMinutes(Long.parseLong(values[7])));
             result.setId(id);
             return result;
         } else {

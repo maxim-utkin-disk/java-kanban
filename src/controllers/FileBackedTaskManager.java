@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 // менеджжер задач с сохранением в файл
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -34,7 +35,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         final FileBackedTaskManager taskManager = new FileBackedTaskManager(file);
         if (!file.exists()) {
             // на случай певрого запуска или когда указанный файл не найден,
-            // предупредим пользователя и бюудем рабоать без восстановления
+            // предупредим пользователя и будем работать без восстановления
             //throw new RuntimeException("Файл " + file.getName() + " не существует. Работа программы прекращена.");
             System.out.println("Файл " + file.getName() + " не найден. Программа запущена без восстановления данных.");
         }
@@ -54,16 +55,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     if (lines.get(i).startsWith("history:")) {
                         ArrayList<Integer> historyFromFile = CSVTaskFormat.historyFromString(lines.get(i));
                         // восстанавливаем историю, заправшивая объекты в порядке прихода id
+                        Optional<TaskType> optTaskTp;
                         for (Integer itemId : historyFromFile) {
-                            if (taskManager.getTaskTypeById(itemId) == TaskType.TASK) {
-                                Task t = taskManager.getTask(itemId);
-                            } else if (taskManager.getTaskTypeById(itemId) == TaskType.EPIC) {
-                                Epic e = taskManager.getEpic(itemId);
-                            } else if (taskManager.getTaskTypeById(itemId) == TaskType.SUBTASK) {
-                                Subtask s = taskManager.getSubtask(itemId);
+                            optTaskTp = taskManager.getTaskTypeById(itemId);
+                            if (optTaskTp.isPresent()) {
+                                if (optTaskTp.get() == TaskType.TASK) {
+                                    Task t = taskManager.getTask(itemId);
+                                } else if (optTaskTp.get() == TaskType.EPIC) {
+                                    Epic e = taskManager.getEpic(itemId);
+                                } else if (optTaskTp.get() == TaskType.SUBTASK) {
+                                    Subtask s = taskManager.getSubtask(itemId);
+                                }
                             }
                         }
-
                     } else {
                         Task taskFromFile = CSVTaskFormat.taskFromString(lines.get(i));
                         if (taskFromFile != null) {
@@ -98,7 +102,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     protected void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
-            writer.write("id,type,name,status,description,epic");
+            writer.write("id,type,name,status,description,epic,startTime,duration");
             writer.newLine();
             for (Task t : getTaskList()) {
                 writer.write(CSVTaskFormat.toString(t));

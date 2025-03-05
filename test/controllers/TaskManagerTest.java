@@ -10,6 +10,8 @@ import model.Subtask;
 import model.Task;
 import utils.Managers;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -40,7 +42,8 @@ class TaskManagerTest {
     @Test
     @Order(1)
     void addTask() {
-        Task task = new Task("Test addTask", "Test addTask description", NEW);
+        Task task = new Task("Test addTask", "Test addTask description", NEW,
+                LocalDateTime.now(), Duration.ofMinutes(1));
         final int taskId = taskManager.addTask(task);
 
         final Task savedTask = taskManager.getTask(taskId);
@@ -90,7 +93,9 @@ class TaskManagerTest {
         Subtask subtask = new Subtask("Test addSubtask",
                 "Test addSubtask description",
                 epics.get(0).getId(),
-                NEW
+                NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(1)
                 );
         final int subtaskId = taskManager.addSubtask(subtask);
         assertTrue(subtaskId >= 0, "Подзадача не добавлена");
@@ -119,7 +124,8 @@ class TaskManagerTest {
     @Test
     @Order(5)
     void noRepeatsInHistory() {
-        int task2Id = taskManager.addTask(new Task("Test task 2 name", "Test task 2 descr", NEW));
+        int task2Id = taskManager.addTask(new Task("Test task 2 name", "Test task 2 descr", NEW,
+                LocalDateTime.now(), Duration.ofMinutes(1)));
         Task task21 = taskManager.getTask(task2Id);
         Task task22 = taskManager.getTask(task2Id);
         Task task23 = taskManager.getTask(task2Id);
@@ -136,7 +142,8 @@ class TaskManagerTest {
     @Test
     @Order(6)
     void noTaskInHistoryAfterRemove() {
-        int task3Id = taskManager.addTask(new Task("Test task 3 name", "Test task 3 descr", NEW));
+        int task3Id = taskManager.addTask(new Task("Test task 3 name", "Test task 3 descr", NEW,
+                LocalDateTime.now(), Duration.ofMinutes(1)));
         Task task3 = taskManager.getTask(task3Id);
         taskManager.deleteTask(task3Id);
 
@@ -179,9 +186,9 @@ class TaskManagerTest {
     void testDeleteEpic() {
         int epic1Id = taskManager.addEpic(new Epic("epic1-test8", "description of epic1-test8"));
         int subtask1Id = taskManager.addSubtask(new Subtask("epic1-test8-subtask1",
-                "description epic1-test8-subtask1", epic1Id, NEW));
+                "description epic1-test8-subtask1", epic1Id, NEW, LocalDateTime.now(), Duration.ofMinutes(1)));
         int subtask2Id = taskManager.addSubtask(new Subtask("epic1-test8-subtask2",
-                "description epic1-test8-subtask2", epic1Id, NEW));
+                "description epic1-test8-subtask2", epic1Id, NEW, LocalDateTime.now(), Duration.ofMinutes(1)));
 
         Subtask s21 = taskManager.getSubtask(subtask2Id);
         Epic e11 = taskManager.getEpic(epic1Id);
