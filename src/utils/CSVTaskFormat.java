@@ -6,8 +6,10 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static utils.GlobalSettings.DATETIME_FORMAT_PATTERN;
+import static utils.GlobalSettings.SAVE2FILE_HISTORY_PREFIX;
 
 public class CSVTaskFormat {
 
@@ -34,11 +36,11 @@ public class CSVTaskFormat {
     }
 
     public static String toString(ArrayList<Task> historyManager) {
-        StringBuilder result = new StringBuilder("history:");
+        StringBuilder result = new StringBuilder(SAVE2FILE_HISTORY_PREFIX.toString());
         for (Task t : historyManager) {
             result.append(t.getId() + ",");
         }
-        if (result.length() > 0) {
+        if (result.length() > SAVE2FILE_HISTORY_PREFIX.length()) {
             result.deleteCharAt(result.length() - 1);
         }
         return result.toString();
@@ -75,15 +77,18 @@ public class CSVTaskFormat {
 
     }
 
-    public static ArrayList<Integer> historyFromString(String value) {
-        if (value.isBlank() || value.isBlank() || !value.startsWith("history:")) {
-            return null;
+    public static Optional<ArrayList<Integer>> historyFromString(String value) {
+        if (value.isBlank() || value.isBlank() || !value.startsWith(SAVE2FILE_HISTORY_PREFIX)) {
+            return Optional.empty();
         }
-        final String[] values = value.substring("history:".length()).split(",");
+        final String[] values = value.substring(SAVE2FILE_HISTORY_PREFIX.length()).split(",");
         ArrayList<Integer> result = new ArrayList<>();
+        if (result.size() == 0) {
+            return Optional.empty();
+        }
         for (String numStr : values) {
             result.add(Integer.parseInt(numStr));
         }
-        return result;
+        return Optional.of(result);
     }
 }

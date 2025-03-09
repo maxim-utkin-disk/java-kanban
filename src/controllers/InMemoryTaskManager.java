@@ -88,10 +88,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTasks() {
-        /*for (Integer taskId : taskList.keySet()) {
-           historyMgr.remove(taskId);
-           prioritizedTasksList.remove(taskList.get(taskId));
-        }*/
         taskList.keySet().forEach(taskId -> {
             historyMgr.remove(taskId);
             prioritizedTasksList.remove(taskList.get(taskId));
@@ -127,18 +123,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteEpic(Epic e) {
-        /*for (int subtaskId : e.getSubtaskIdsList()) {
-            historyMgr.remove(subtaskId);
-        }
-
-        e.getSubtaskIdsList().stream().forEach(id -> {
-            historyMgr.remove(id);
-        });
-
-        e.getSubtaskIdsList().stream().forEach(historyMgr::remove);*/
-
         e.getSubtaskIdsList().forEach(historyMgr::remove);
-
         historyMgr.remove(e.getId());
         deleteAllSubtasksByEpic(e);
         epicList.remove(e.getId());
@@ -146,16 +131,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllEpics() {
-        /*for (Integer subtaskId : subtaskList.keySet()) {
-            historyMgr.remove(subtaskId);
-        }*/
         subtaskList.keySet().forEach(subtaskId -> {
             historyMgr.remove(subtaskId);
             prioritizedTasksList.remove(subtaskList.get(subtaskId));
         });
-        /*for (Integer epicId : epicList.keySet()) {
-            historyMgr.remove(epicId);
-        }*/
+
         epicList.keySet().forEach(historyMgr::remove);
         subtaskList.clear();
         epicList.clear();
@@ -223,19 +203,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllSubtasks()    {
-        /*for (Integer subtaskId : subtaskList.keySet()) {
-            historyMgr.remove(subtaskId);
-        }*/
         subtaskList.keySet().forEach(subtaskId -> {
           historyMgr.remove(subtaskId);
           prioritizedTasksList.remove(subtaskList.get(subtaskId));
           });
-        /*for (Epic epic : epicList.values()) {
-            subtaskList.clear();
-            epic.getSubtaskIdsList().clear();
-            epic.actualizeStatus(getSubtaskList());
-            epic.actualizeEpicExecutionPeriod(getSubtaskList());
-        }*/
+
         subtaskList.clear();
         epicList.values()
                 .stream()
@@ -248,19 +220,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllSubtasksByEpic(Epic e) {
-        /*for (int i = getSubtaskList().size() - 1; i >= 0; i--) {
-            Subtask s = getSubtaskList().get(i);
-            if (s.getEpicId() == e.getId()) {
-                historyMgr.remove(s.getId());
-                subtaskList.remove(s.getId());
-            }
-        }*/
         getSubtaskList().stream()
-                        .filter(subtask -> subtask.getId() == e.getId())
+                        .filter(subtask -> subtask.getEpicId() == e.getId())
                         .forEach(subtask -> {
                                 historyMgr.remove(subtask.getId());
-                                subtaskList.remove(subtask.getId());
                                 prioritizedTasksList.remove(subtask);
+                                subtaskList.remove(subtask.getId(), subtask);
                         });
         e.getSubtaskIdsList().clear();
         e.actualizeStatus(getSubtaskList());
@@ -308,35 +273,12 @@ public class InMemoryTaskManager implements TaskManager {
         if (t.getStartTime() == null) {
             return false;
         }
-        /*for(Task taskFromList : getPrioritizedTasks()) {
-            if (taskFromList.getId() != t.getId()) {
-                if (taskFromList.getStartTime().isBefore(t.getEndTime())
-                    && taskFromList.getEndTime().isAfter(t.getStartTime())) {
-                    return true;
-                }
-            }
-        }*/
-
-/*
-        return getPrioritizedTasks().stream().anyMatch(taskFromList ->
-                   taskFromList.getId() != t.getId() &&
-                   taskFromList.getStartTime().isBefore(t.getEndTime()) &&
-                   taskFromList.getEndTime().isAfter(t.getStartTime())
-        );
-*/
-
-        //List<Integer> intList = getPrioritizedTasks().stream().map(Task::getId).toList();
 
         return getPrioritizedTasks().stream()
                 .filter(taskFromList -> taskFromList.getId() != t.getId())
                 .filter(taskFromList -> taskFromList.getStartTime().isBefore(t.getEndTime()) &&
                                         taskFromList.getEndTime().isAfter(t.getStartTime()))
                 .count() > 0;
-
-
-
-
-        //return false;
     }
 
 

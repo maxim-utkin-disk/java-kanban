@@ -2,11 +2,12 @@ package utils;
 
 import controllers.HistoryManager;
 import controllers.InMemoryHistoryManager;
-//import controllers.InMemoryTaskManager;
 import controllers.TaskManager;
 import controllers.FileBackedTaskManager;
 
 import java.io.File;
+
+import static utils.GlobalSettings.FILE_NAME;
 
 public class Managers {
 
@@ -16,7 +17,7 @@ public class Managers {
 
     public static TaskManager getDefaultManager() {
         //return new InMemoryTaskManager();
-        return FileBackedTaskManager.loadFromFile(new File("task_list.csv"));
+        return FileBackedTaskManager.loadFromFile(new File(FILE_NAME));
 
     }
 

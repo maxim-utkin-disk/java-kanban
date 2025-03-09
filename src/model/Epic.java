@@ -43,11 +43,15 @@ public class Epic extends Task {
     public void printEpic(ArrayList<Subtask> subtaskList) {
         System.out.println(this);
         System.out.println("Подзадачи эпика (всего " + subtaskIdsList.size() + " позиций):");
-        for (Subtask s : subtaskList) {
+        /*for (Subtask s : subtaskList) {
             if (s.getEpicId() == this.getId())  {
                 System.out.println(s);
             }
-        }
+        }*/
+        subtaskList.stream()
+                .filter(subtask -> subtask.getEpicId() == this.getId())
+                .forEach(System.out::println);
+
     }
 
     @Override
@@ -59,7 +63,7 @@ public class Epic extends Task {
          result.append(", Статус = " + getStatus().toString());
          result.append(", кол-во подзадач = " + subtaskIdsList.size());
          if (this.getStartTime() != null) {
-             result.append(getStartTime().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)));
+             result.append(", дата-время начала " + getStartTime().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)));
          }
          if (this.getDuration() != null) {
              result.append(", продолжительность " + String.format("%d", getDuration().toMinutes()) + " минут");

@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static utils.GlobalSettings.SAVE2FILE_HISTORY_PREFIX;
+
 // менеджжер задач с сохранением в файл
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
@@ -52,19 +54,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         i++;
                         continue;
                     }
-                    if (lines.get(i).startsWith("history:")) {
-                        ArrayList<Integer> historyFromFile = CSVTaskFormat.historyFromString(lines.get(i));
-                        // восстанавливаем историю, заправшивая объекты в порядке прихода id
-                        Optional<TaskType> optTaskTp;
-                        for (Integer itemId : historyFromFile) {
-                            optTaskTp = taskManager.getTaskTypeById(itemId);
-                            if (optTaskTp.isPresent()) {
-                                if (optTaskTp.get() == TaskType.TASK) {
-                                    Task t = taskManager.getTask(itemId);
-                                } else if (optTaskTp.get() == TaskType.EPIC) {
-                                    Epic e = taskManager.getEpic(itemId);
-                                } else if (optTaskTp.get() == TaskType.SUBTASK) {
-                                    Subtask s = taskManager.getSubtask(itemId);
+                    if (lines.get(i).startsWith(SAVE2FILE_HISTORY_PREFIX)) {
+                        Optional<ArrayList<Integer>> historyFromFile = CSVTaskFormat.historyFromString(lines.get(i));
+                        if (historyFromFile.isPresent()) {
+                            // восстанавливаем историю, заправшивая объекты в порядке прихода id
+                            Optional<TaskType> optTaskTp;
+                            for (Integer itemId : historyFromFile.get()) {
+                                optTaskTp = taskManager.getTaskTypeById(itemId);
+                                if (optTaskTp.isPresent()) {
+                                    if (optTaskTp.get() == TaskType.TASK) {
+                                        Task t = taskManager.getTask(itemId);
+                                    } else if (optTaskTp.get() == TaskType.EPIC) {
+                                        Epic e = taskManager.getEpic(itemId);
+                                    } else if (optTaskTp.get() == TaskType.SUBTASK) {
+                                        Subtask s = taskManager.getSubtask(itemId);
+                                    }
                                 }
                             }
                         }
