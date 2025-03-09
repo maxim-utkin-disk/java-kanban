@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import static utils.GlobalSettings.DATETIME_FORMAT_PATTERN;
 
-public class Task implements Comparable<Task>{
+public class Task implements Comparable<Task> {
 
     private String name;
     private String description;
