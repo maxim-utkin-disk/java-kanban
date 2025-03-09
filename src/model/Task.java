@@ -1,15 +1,22 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-public class Task {
+import static utils.GlobalSettings.DATETIME_FORMAT_PATTERN;
+
+public class Task implements Comparable<Task> {
 
     private String name;
     private String description;
     private int id;
     protected TaskState status;
+    protected Duration duration;
+    protected LocalDateTime startTime;
 
-    public Task(String name, String description, TaskState status) {
+    public Task(String name, String description, TaskState status, LocalDateTime startTime, Duration duration) {
         this.name = name;
         this.description = description;
         if (status == null) {
@@ -18,6 +25,12 @@ public class Task {
             this.status = status;
         }
         this.id = -1;
+        this.startTime = startTime;
+        if (duration == null) {
+            this.duration = Duration.ofMinutes(0L);
+        } else {
+            this.duration = duration;
+        }
     }
 
     public String getName() {
@@ -52,6 +65,22 @@ public class Task {
         this.status = status;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
     // в ТЗ просят сравнивать только id
     @Override
     public boolean equals(Object o) {
@@ -72,10 +101,25 @@ public class Task {
         return "Задача (task) id=" + id +
                 ", Наименование = " + name +
                 ", Описание = " + description +
-                ", Статус = " + status.toString();
+                ", Статус = " + status.toString() +
+                ", дата/время начала = " + startTime.format(DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)) +
+                ", продолжительность " + String.format("%d", duration.toMinutes()) + " минут";
     }
 
     public TaskType getTaskType() {
         return TaskType.TASK;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null) {
+            return null;
+        } else {
+           return startTime.plusMinutes(duration.toMinutes());
+        }
+    }
+
+    @Override
+    public int compareTo(Task o) {
+        return this.startTime.compareTo(o.startTime);
     }
 }
