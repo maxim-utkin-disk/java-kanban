@@ -9,7 +9,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.TreeSet;
 
 import static model.TaskState.NEW;
 import static org.junit.jupiter.api.Assertions.*;
@@ -94,11 +93,13 @@ abstract public class TaskManagerTest  <T extends TaskManager> {
 
     void deleteAllTasks() {
         Task task1 = new Task("Test for deleteAllTasks 1", "Test for deleteAllTasks description 1", NEW,
-                LocalDateTime.now(), Duration.ofMinutes(1));
+                LocalDateTime.parse("2025-01-02 03:04:05", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int task1Id = taskManager.addTask(task1);
 
         Task task2 = new Task("Test for deleteAllTasks 2", "Test for deleteAllTasks description 2", NEW,
-                LocalDateTime.now(), Duration.ofMinutes(1));
+                LocalDateTime.parse("2025-01-02 04:05:06", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int task2Id = taskManager.addTask(task2);
 
         taskManager.deleteAllTasks();
@@ -169,6 +170,41 @@ abstract public class TaskManagerTest  <T extends TaskManager> {
 
         taskManager.deleteAllEpics();
         assertEquals(0, taskManager.getEpicList().size(), "После удаления всех эпиков список должен быть пустым");
+    }
+
+    void actualizeEpicExecutionPeriod() {
+        Epic epic = new Epic("Test Epic for actualizeEpicExecutionPeriod",
+                "Test Epic for actualizeEpicExecutionPeriod description");
+        final int epicId = taskManager.addEpic(epic);
+
+        Subtask subtask1 = new Subtask("Test Subtask1 for actualizeEpicExecutionPeriod",
+                "Test subtask1 for actualizeEpicExecutionPeriod description",
+                epicId,
+                TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 03:04:05", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
+        final int subtask1Id = taskManager.addSubtask(subtask1);
+
+        Subtask subtask2 = new Subtask("Test Subtask2 for actualizeEpicExecutionPeriod",
+                "Test subtask2 for actualizeEpicExecutionPeriod description",
+                epicId,
+                TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 04:05:06", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
+        final int subtask2Id = taskManager.addSubtask(subtask2);
+
+        Subtask subtask3 = new Subtask("Test Subtask3 for actualizeEpicExecutionPeriod",
+                "Test subtask3 for actualizeEpicExecutionPeriod description",
+                epicId,
+                TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 05:06:07", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
+        final int subtask3Id = taskManager.addSubtask(subtask3);
+
+        epic.actualizeEpicExecutionPeriod();
+        assertTrue(
+                (epic.getDuration().toMinutes() == 3),
+                "В данном тесте продолжительность эпика должна быть 3 минуты" + " " + epic.getDuration().toMinutes());
     }
 
     //тесты методов работы с Сабтасками
@@ -243,12 +279,16 @@ abstract public class TaskManagerTest  <T extends TaskManager> {
 
         Subtask subtask11 = new Subtask("Test Subtask11 for deleteAllSubtasks",
                 "Test subtask11 for deleteAllSubtasks description",
-                epic1Id, TaskState.NEW, LocalDateTime.now(), Duration.ofMinutes(1));
+                epic1Id, TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 04:05:06", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int subtask11Id = taskManager.addSubtask(subtask11);
 
         Subtask subtask12 = new Subtask("Test Subtask12 for deleteAllSubtasks",
                 "Test subtask12 for deleteAllSubtasks description",
-                epic1Id, TaskState.NEW, LocalDateTime.now(), Duration.ofMinutes(1));
+                epic1Id, TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 05:06:07", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int subtask12Id = taskManager.addSubtask(subtask12);
 
         Epic epic2 = new Epic("Test Epic2 for deleteAllSubtasks",
@@ -257,7 +297,9 @@ abstract public class TaskManagerTest  <T extends TaskManager> {
 
         Subtask subtask21 = new Subtask("Test Subtask21 for deleteAllSubtasks",
                 "Test subtask21 for deleteAllSubtasks description",
-                epic1Id, TaskState.NEW, LocalDateTime.now(), Duration.ofMinutes(1));
+                epic1Id, TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 06:07:08", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int subtask21Id = taskManager.addSubtask(subtask21);
 
         taskManager.deleteAllSubtasks();
@@ -273,12 +315,16 @@ abstract public class TaskManagerTest  <T extends TaskManager> {
 
         Subtask subtask11 = new Subtask("Test Subtask11 for deleteAllSubtasksByEpic",
                 "Test subtask11 for deleteAllSubtasksByEpic description",
-                epic1Id, TaskState.NEW, LocalDateTime.now(), Duration.ofMinutes(1));
+                epic1Id, TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 03:04:05", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int subtask11Id = taskManager.addSubtask(subtask11);
 
         Subtask subtask12 = new Subtask("Test Subtask12 for deleteAllSubtasksByEpic",
                 "Test subtask12 for deleteAllSubtasksByEpic description",
-                epic1Id, TaskState.NEW, LocalDateTime.now(), Duration.ofMinutes(1));
+                epic1Id, TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 04:05:06", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int subtask12Id = taskManager.addSubtask(subtask12);
 
         Epic epic2 = new Epic("Test Epic2 for deleteAllSubtasksByEpic",
@@ -287,14 +333,16 @@ abstract public class TaskManagerTest  <T extends TaskManager> {
 
         Subtask subtask21 = new Subtask("Test Subtask21 for deleteAllSubtasksByEpic",
                 "Test subtask21 for deleteAllSubtasksByEpic description",
-                epic2Id, TaskState.NEW, LocalDateTime.now(), Duration.ofMinutes(1));
+                epic2Id, TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 05:06:07", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int subtask21Id = taskManager.addSubtask(subtask21);
 
         taskManager.deleteAllSubtasksByEpic(epic2);
         assertEquals(0,
-                taskManager.getEpic(epic2Id).getSubtaskIdsList().size(),
+                taskManager.getEpic(epic2Id).getSubtasksPerEpic().size(),
                 "После удаления всех подзадач одного эпика список его подзадач должен быть пустым");
-        assertTrue((taskManager.getSubtaskList().size() == taskManager.getEpic(epic1Id).getSubtaskIdsList().size()),
+        assertTrue((taskManager.getSubtaskList().size() == taskManager.getEpic(epic1Id).getSubtasksPerEpic().size()),
                 "После удаления всех подзадач одного эпика список оставшихся подзадач других эпиков не должен быть пустым ");
 
     }
@@ -307,7 +355,7 @@ abstract public class TaskManagerTest  <T extends TaskManager> {
     };
 
     void getPrioritizedTasks() {
-        final TreeSet<Task> sortedTasks = taskManager.getPrioritizedTasks();
+        final ArrayList<Task> sortedTasks = taskManager.getPrioritizedTasks();
         assertNotNull(sortedTasks, "Не создался отсортированный список задач");
         assertEquals(0, sortedTasks.size(), "Неверное количество элементов в пустом списке сортированных задач.");
     }
@@ -324,17 +372,23 @@ abstract public class TaskManagerTest  <T extends TaskManager> {
 
         Subtask subtask11 = new Subtask("Test Subtask11 for checkEpicStatus",
                 "Test subtask11 for checkEpicStatus description",
-                epicId, TaskState.NEW, LocalDateTime.now(), Duration.ofMinutes(1));
+                epicId, TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 03:04:05", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int subtask11Id = taskManager.addSubtask(subtask11);
 
         Subtask subtask12 = new Subtask("Test Subtask12 for checkEpicStatus",
                 "Test subtask12 for checkEpicStatus description",
-                epicId, TaskState.NEW, LocalDateTime.now(), Duration.ofMinutes(1));
+                epicId, TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 04:05:06", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int subtask12Id = taskManager.addSubtask(subtask12);
 
         Subtask subtask13 = new Subtask("Test Subtask13 for checkEpicStatus",
                 "Test subtask13 for checkEpicStatus description",
-                epicId, TaskState.NEW, LocalDateTime.now(), Duration.ofMinutes(1));
+                epicId, TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 06:07:08", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int subtask13Id = taskManager.addSubtask(subtask13);
 
         assertTrue(
@@ -349,17 +403,23 @@ abstract public class TaskManagerTest  <T extends TaskManager> {
 
         Subtask subtask11 = new Subtask("Test Subtask11 for checkEpicStatus",
                 "Test subtask11 for checkEpicStatus description",
-                epicId, TaskState.DONE, LocalDateTime.now(), Duration.ofMinutes(1));
+                epicId, TaskState.DONE,
+                LocalDateTime.parse("2025-01-02 03:04:05", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int subtask11Id = taskManager.addSubtask(subtask11);
 
         Subtask subtask12 = new Subtask("Test Subtask12 for checkEpicStatus",
                 "Test subtask12 for checkEpicStatus description",
-                epicId, TaskState.DONE, LocalDateTime.now(), Duration.ofMinutes(1));
+                epicId, TaskState.DONE,
+                LocalDateTime.parse("2025-01-02 04:05:06", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int subtask12Id = taskManager.addSubtask(subtask12);
 
         Subtask subtask13 = new Subtask("Test Subtask13 for checkEpicStatus",
                 "Test subtask13 for checkEpicStatus description",
-                epicId, TaskState.DONE, LocalDateTime.now(), Duration.ofMinutes(1));
+                epicId, TaskState.DONE,
+                LocalDateTime.parse("2025-01-02 05:06:07", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int subtask13Id = taskManager.addSubtask(subtask13);
 
         assertTrue(
@@ -374,12 +434,16 @@ abstract public class TaskManagerTest  <T extends TaskManager> {
 
         Subtask subtask11 = new Subtask("Test Subtask11 for checkEpicStatus",
                 "Test subtask11 for checkEpicStatus description",
-                epicId, TaskState.NEW, LocalDateTime.now(), Duration.ofMinutes(1));
+                epicId, TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 03:04:05", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int subtask11Id = taskManager.addSubtask(subtask11);
 
         Subtask subtask12 = new Subtask("Test Subtask12 for checkEpicStatus",
                 "Test subtask12 for checkEpicStatus description",
-                epicId, TaskState.DONE, LocalDateTime.now(), Duration.ofMinutes(1));
+                epicId, TaskState.DONE,
+                LocalDateTime.parse("2025-01-02 04:05:06", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int subtask12Id = taskManager.addSubtask(subtask12);
 
         assertTrue(
@@ -394,17 +458,23 @@ abstract public class TaskManagerTest  <T extends TaskManager> {
 
         Subtask subtask11 = new Subtask("Test Subtask11 for checkEpicStatus",
                 "Test subtask11 for checkEpicStatus description",
-                epicId, TaskState.IN_PROGRESS, LocalDateTime.now(), Duration.ofMinutes(1));
+                epicId, TaskState.IN_PROGRESS,
+                LocalDateTime.parse("2025-01-02 03:04:05", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int subtask11Id = taskManager.addSubtask(subtask11);
 
         Subtask subtask12 = new Subtask("Test Subtask12 for checkEpicStatus",
                 "Test subtask12 for checkEpicStatus description",
-                epicId, TaskState.IN_PROGRESS, LocalDateTime.now(), Duration.ofMinutes(1));
+                epicId, TaskState.IN_PROGRESS,
+                LocalDateTime.parse("2025-01-02 04:05:06", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int subtask12Id = taskManager.addSubtask(subtask12);
 
         Subtask subtask13 = new Subtask("Test Subtask13 for checkEpicStatus",
                 "Test subtask13 for checkEpicStatus description",
-                epicId, TaskState.IN_PROGRESS, LocalDateTime.now(), Duration.ofMinutes(1));
+                epicId, TaskState.IN_PROGRESS,
+                LocalDateTime.parse("2025-01-02 05:06:07", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int subtask13Id = taskManager.addSubtask(subtask13);
 
         assertTrue(
@@ -457,6 +527,32 @@ abstract public class TaskManagerTest  <T extends TaskManager> {
 
     }
 
+    void addToPrioritizedTasksList() {
+        InMemoryTaskManager inMemTaskMgr = new InMemoryTaskManager();
+
+        Task t1 = new Task("Test t1 for hasIntersectWithOtherTask",
+                "Test t1 for hasIntersectWithOtherTask description",
+                TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 03:04:05", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(6));
+        int task1Id = inMemTaskMgr.addTask(t1);
+        inMemTaskMgr.addToPrioritizedTasksList(t1);
+        assertEquals(1,
+                inMemTaskMgr.getPrioritizedTasks().size(),
+                "В данном тесте в списке приоритетов должна быть одна задача");
+
+        Task t2 = new Task("Test t2 for hasIntersectWithOtherTask",
+                "Test t2 for hasIntersectWithOtherTask description",
+                TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 04:05:06", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(3));
+        int task2Id = inMemTaskMgr.addTask(t2);
+        inMemTaskMgr.addToPrioritizedTasksList(t2);
+
+        assertEquals(2,
+                inMemTaskMgr.getPrioritizedTasks().size(),
+                "В данном тесте в списке приоритетов должно быть две задачи");
+    }
 
     // тесты для истории
     void checkEmptyHistory() {
@@ -467,7 +563,8 @@ abstract public class TaskManagerTest  <T extends TaskManager> {
     void checkHistoryDuplicates() {
         Task task1 = new Task("Test task1 for checkHistoryDuplicates",
                 "Test task1 for checkHistoryDuplicates description", NEW,
-                LocalDateTime.now(), Duration.ofMinutes(1));
+                LocalDateTime.parse("2025-01-02 03:04:05", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int task1Id = taskManager.addTask(task1);
 
         Task histTask1 = taskManager.getTask(task1Id);
@@ -483,27 +580,32 @@ abstract public class TaskManagerTest  <T extends TaskManager> {
     void checkHistoryDeletions() {
         Task task1 = new Task("Test task1 for checkHistoryDeletions",
                 "Test task1 for checkHistoryDeletions description", TaskState.NEW,
-                LocalDateTime.now(), Duration.ofMinutes(1));
+                LocalDateTime.parse("2025-01-02 03:04:05", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int task1Id = taskManager.addTask(task1);
 
         Task task2 = new Task("Test task2 for checkHistoryDeletions",
                 "Test task2 for checkHistoryDeletions description", TaskState.NEW,
-                LocalDateTime.now(), Duration.ofMinutes(1));
+                LocalDateTime.parse("2025-01-02 04:05:06", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int task2Id = taskManager.addTask(task2);
 
         Task task3 = new Task("Test task3 for checkHistoryDeletions",
                 "Test task3 for checkHistoryDeletions description", TaskState.NEW,
-                LocalDateTime.now(), Duration.ofMinutes(1));
+                LocalDateTime.parse("2025-01-02 05:06:06", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int task3Id = taskManager.addTask(task3);
 
         Task task4 = new Task("Test task4 for checkHistoryDeletions",
                 "Test task4 for checkHistoryDeletions description", TaskState.NEW,
-                LocalDateTime.now(), Duration.ofMinutes(1));
+                LocalDateTime.parse("2025-01-02 06:07:08", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int task4Id = taskManager.addTask(task4);
 
         Task task5 = new Task("Test task5 for checkHistoryDeletions",
                 "Test task5 for checkHistoryDeletions description", TaskState.NEW,
-                LocalDateTime.now(), Duration.ofMinutes(1));
+                LocalDateTime.parse("2025-01-02 07:08:09", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
         final int task5Id = taskManager.addTask(task5);
 
         Task histTask1 = taskManager.getTask(task1Id);

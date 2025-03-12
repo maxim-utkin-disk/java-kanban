@@ -5,51 +5,49 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Optional;
 
 import static utils.GlobalSettings.DATETIME_FORMAT_PATTERN;
 
 public class Epic extends Task {
 
-    private final ArrayList<Integer> subtaskIdsList;
+    private final HashMap<Integer, Subtask> subtasksPerEpic;
     private LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description, TaskState.NEW, null, null);
-        subtaskIdsList = new ArrayList<>();
+        subtasksPerEpic = new HashMap<>();
     }
 
-    public ArrayList<Integer> getSubtaskIdsList() {
-        return subtaskIdsList;
+    public ArrayList<Subtask> getSubtasksPerEpic() {
+        return new ArrayList<>(subtasksPerEpic.values());
     }
 
-    public void addSubtaskId(int subtaskId) {
-        if (!subtaskIdsList.contains(subtaskId)) {
-            subtaskIdsList.add(subtaskId);
+    public void linkSubtaskToEpic(Subtask s) {
+        if (!subtasksPerEpic.containsKey(s.getId())) {
+            subtasksPerEpic.put(s.getId(), s);
         }
+        actualizeStatus();
+        actualizeEpicExecutionPeriod();
     }
 
-    public void deleteSubtaskId(int subtaskId) {
-        if (!subtaskIdsList.contains(subtaskId)) {
-            return;
-        }
-        for (int i = subtaskIdsList.size() - 1; i >= 0; i--) {
-            if (subtaskIdsList.get(i) == subtaskId) {
-                subtaskIdsList.remove(i);
-            }
-        }
+    public void unlinkSubtaskFromEpic(Subtask s) {
+        subtasksPerEpic.remove(s.getId(), s);
+        actualizeStatus();
+        actualizeEpicExecutionPeriod();
     }
 
-    public void printEpic(ArrayList<Subtask> subtaskList) {
+    public void unlinkAllSubtasksFromEpic() {
+        subtasksPerEpic.clear();
+        actualizeStatus();
+        actualizeEpicExecutionPeriod();
+    }
+
+    public void printEpic() {
         System.out.println(this);
-        System.out.println("Подзадачи эпика (всего " + subtaskIdsList.size() + " позиций):");
-        /*for (Subtask s : subtaskList) {
-            if (s.getEpicId() == this.getId())  {
-                System.out.println(s);
-            }
-        }*/
-        subtaskList.stream()
-                .filter(subtask -> subtask.getEpicId() == this.getId())
+        System.out.println("Подзадачи эпика (всего " + subtasksPerEpic.size() + " позиций):");
+        subtasksPerEpic.values().stream()
                 .forEach(System.out::println);
 
     }
@@ -61,52 +59,34 @@ public class Epic extends Task {
          result.append(", Наименование = " + getName());
          result.append(", Описание = " + getDescription());
          result.append(", Статус = " + getStatus().toString());
-         result.append(", кол-во подзадач = " + subtaskIdsList.size());
+         result.append(", кол-во подзадач = " + subtasksPerEpic.size());
          if (this.getStartTime() != null) {
              result.append(", дата-время начала " + getStartTime().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)));
          }
          if (this.getDuration() != null) {
              result.append(", продолжительность " + String.format("%d", getDuration().toMinutes()) + " минут");
          }
-        /*return "Эпик (epic) id=" + getId() +
-                ", Наименование = " + getName() +
-                ", Описание = " + getDescription() +
-                ", Статус = " + getStatus().toString() +
-                ", кол-во подзадач = " + subtaskIdsList.size() +
-                ", дата/время начала = " + getStartTime().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)) +
-                ", продолжительность " + String.format("%d", getDuration().toMinutes()) + " минут";*/
         return result.toString();
     }
 
-    public void actualizeStatus(ArrayList<Subtask> subtaskList) {
-        if (subtaskIdsList.isEmpty()) {
+    public void actualizeStatus() {
+        if (subtasksPerEpic.isEmpty()) {
             this.status = TaskState.NEW;
         } else {
             int cntStatusNew = 0;
             int cntStatusDone = 0;
-            /*for (int i = 0; i < subtaskList.size(); i++) {
-                Subtask s = subtaskList.get(i);
-                if (s.getEpicId() == this.getId()) {
-                    if (s.getStatus() == TaskState.NEW) {
-                        cntStatusNew++;
-                    }
-                    if (s.getStatus() == TaskState.DONE) {
-                        cntStatusDone++;
-                    }
-                }
-            }*/
 
-            cntStatusNew = (int)subtaskList.stream()
-                    .filter(subtask -> ((subtask.getEpicId() == this.getId()) && (subtask.getStatus() == TaskState.NEW)))
+            cntStatusNew = (int)subtasksPerEpic.values().stream()
+                    .filter(subtask -> (subtask.getStatus() == TaskState.NEW))
                     .count();
 
-            cntStatusDone = (int)subtaskList.stream()
-                    .filter(subtask -> ((subtask.getEpicId() == this.getId()) && (subtask.getStatus() == TaskState.DONE)))
+            cntStatusDone = (int)subtasksPerEpic.values().stream()
+                    .filter(subtask -> (subtask.getStatus() == TaskState.DONE))
                     .count();
 
-            if (cntStatusNew == subtaskIdsList.size()) {
+            if (cntStatusNew == subtasksPerEpic.size()) {
                 this.status = TaskState.NEW;
-            } else if (cntStatusDone == subtaskIdsList.size()) {
+            } else if (cntStatusDone == subtasksPerEpic.size()) {
                 this.status = TaskState.DONE;
             } else {
                 this.status = TaskState.IN_PROGRESS;
@@ -118,66 +98,28 @@ public class Epic extends Task {
         return TaskType.EPIC;
     }
 
-    public void actualizeEpicExecutionPeriod(ArrayList<Subtask> subtaskList) {
-        if (subtaskIdsList.isEmpty()) {
+    public void actualizeEpicExecutionPeriod() {
+        if (subtasksPerEpic.isEmpty()) {
             this.startTime = null;
             this.duration = Duration.ofMinutes(0L);
             this.endTime = null;
         } else {
-            //LocalDateTime minSubtaskStartTime = null;
-            //LocalDateTime maxSubtaskEndTime = null;
-
-
-            /*for (int i = 0; i < subtaskList.size(); i++) {
-                Subtask s = subtaskList.get(i);
-                if (s.getEpicId() == this.getId()) {
-                    if (s.getStartTime() != null) {
-                        if (minSubtaskStartTime == null) {
-                            minSubtaskStartTime = s.getStartTime();
-                        } else {
-                            if (s.getStartTime().isBefore(minSubtaskStartTime)) {
-                                minSubtaskStartTime = s.getStartTime();
-                            }
-                        }
-                        if (maxSubtaskEndTime == null) {
-                            maxSubtaskEndTime = s.getEndTime();
-                        } else {
-                            if (s.getEndTime().isAfter(maxSubtaskEndTime)) {
-                                maxSubtaskEndTime = s.getEndTime();
-                            }
-                        }
-                    }
-
-                }
-            }*/
-
-            Optional<Subtask> startSubtask = subtaskList.stream()
-                    .filter(subtask -> subtask.getEpicId() == this.getId())
+            Optional<Subtask> startSubtask = subtasksPerEpic.values().stream()
                     .min(Comparator.comparing(Task::getStartTime));
 
-            /*
-            Optional<Subtask> startSubtask = subtaskList.stream()
-                    .filter(subtask -> subtask.getEpicId() == this.getId())
-                    .min((o1, o2) -> o1.getStartTime().compareTo(o2.getStartTime()));*/
-
-            Optional<Subtask> endSubtask = subtaskList.stream()
-                    .filter(subtask -> subtask.getEpicId() == this.getId())
+            Optional<Subtask> endSubtask = subtasksPerEpic.values().stream()
                     .max(Comparator.comparing(Task::getEndTime));
 
             startSubtask.ifPresent(subtask -> this.startTime = subtask.getStartTime());
             endSubtask.ifPresent(subtask -> this.endTime = subtask.getEndTime());
 
-            //this.startTime = minSubtaskStartTime;
-            //this.endTime = maxSubtaskEndTime;
+            Duration calculatedDuration = subtasksPerEpic.values().stream()
+                    .filter(subtask -> subtask.getDuration() != null)
+                    .map(subtask -> subtask.getDuration())
+                    .reduce(Duration.ZERO, Duration::plus);
 
-            if (startSubtask.isPresent() && endSubtask.isPresent()) {
-                this.duration = Duration.between(startSubtask.get().getStartTime(),
-                                                 endSubtask.get().getEndTime());
-            } else {
-                this.duration = null;
-            }
+            this.duration = calculatedDuration;
 
-            //this.duration = Duration.between(minSubtaskStartTime, maxSubtaskEndTime);
         }
     }
 
