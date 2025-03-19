@@ -37,10 +37,10 @@ public class TaskHandler extends BaseHttpHandler {
     protected void handleInternal(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
         String uriPath = exchange.getRequestURI().getPath();
-        String uriPathItems[] = uriPath.split("/");
+        String[] uriPathItems = uriPath.split("/");
         Integer taskId;
 
-        switch(method) {
+        switch (method) {
             case "GET":
                     if (uriPathItems.length == 2) {
                         ArrayList<Task> taskList = taskManager.getTaskList();
@@ -123,7 +123,7 @@ public class TaskHandler extends BaseHttpHandler {
     }
 
     @Override
-    public void handle (HttpExchange exchange) {
+    public void handle(HttpExchange exchange) {
         tryHandle(exchange);
     }
 

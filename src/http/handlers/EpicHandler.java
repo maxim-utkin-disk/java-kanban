@@ -37,10 +37,10 @@ public class EpicHandler extends BaseHttpHandler {
     protected void handleInternal(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
         String uriPath = exchange.getRequestURI().getPath();
-        String uriPathItems[] = uriPath.split("/");
+        String[] uriPathItems = uriPath.split("/");
         Integer epicId;
 
-        switch(method) {
+        switch (method) {
             case "GET":
                 if (uriPathItems.length == 2) {
                     ArrayList<Epic> epicList = taskManager.getEpicList();
@@ -134,7 +134,7 @@ public class EpicHandler extends BaseHttpHandler {
     }
 
     @Override
-    public void handle (HttpExchange exchange) {
+    public void handle(HttpExchange exchange) {
         tryHandle(exchange);
     }
 
