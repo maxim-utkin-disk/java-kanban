@@ -26,7 +26,7 @@ public class PrioritizedHandler extends BaseHttpHandler {
     }
 
     @Override
-    protected void handleInternal(HttpExchange exchange) throws IOException {
+    public void handleInternal(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
         String uriPath = exchange.getRequestURI().getPath();
         String[] uriPathItems = uriPath.split("/");
