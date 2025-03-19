@@ -49,7 +49,6 @@ public abstract class BaseHttpHandler implements HttpHandler {
 
     protected void handleInternal(HttpExchange exchange) throws IOException {
     }
-    ;
 
     protected void tryHandle(HttpExchange h) {
         try {
