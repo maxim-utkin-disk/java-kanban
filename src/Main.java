@@ -18,7 +18,7 @@ public class Main {
         TaskManager taskMgr = Managers.getDefaultManager();
         CheckTaskManager.fillTaskManager(taskMgr);
         HttpTaskServer hts = new HttpTaskServer(taskMgr);
-        hts.HttpTaskServerStart();
+        hts.httpTaskServerStart();
     }
 
 }

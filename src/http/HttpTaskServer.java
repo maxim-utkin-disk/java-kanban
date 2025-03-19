@@ -23,12 +23,12 @@ public class HttpTaskServer {
 
     }
 
-    public void HttpTaskServerStart() {
+    public void httpTaskServerStart() {
         System.out.println("HttpTaskServer started on port = " + GlobalSettings.PORT);
         httpServer.start();
     }
 
-    public void HttpTaskServerStop() {
+    public void httpTaskServerStop() {
         System.out.println("HttpTaskServer stopped");
         httpServer.stop(0);
     }

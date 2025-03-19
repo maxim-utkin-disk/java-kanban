@@ -46,7 +46,7 @@ public class HttpTaskHandlerTest {
         } catch (IOException ioe) {
             System.out.println(ioe.getMessage());
         }
-        hts.HttpTaskServerStart();
+        hts.httpTaskServerStart();
     }
 
     @BeforeEach
@@ -58,7 +58,7 @@ public class HttpTaskHandlerTest {
 
     @AfterAll
     public static void shutDown() {
-        hts.HttpTaskServerStop();
+        hts.httpTaskServerStop();
     }
 
     @Test

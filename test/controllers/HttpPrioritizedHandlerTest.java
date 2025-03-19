@@ -47,7 +47,7 @@ public class HttpPrioritizedHandlerTest {
         } catch (IOException ioe) {
             System.out.println(ioe.getMessage());
         }
-        hts.HttpTaskServerStart();
+        hts.httpTaskServerStart();
     }
 
     @BeforeEach
@@ -59,7 +59,7 @@ public class HttpPrioritizedHandlerTest {
 
     @AfterAll
     public static void shutDown() {
-        hts.HttpTaskServerStop();
+        hts.httpTaskServerStop();
     }
 
     @Test

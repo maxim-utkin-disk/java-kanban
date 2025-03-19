@@ -40,7 +40,7 @@ public class HttpEpicHandlerTest {
         } catch (IOException ioe) {
             System.out.println(ioe.getMessage());
         }
-        hts.HttpTaskServerStart();
+        hts.httpTaskServerStart();
     }
 
     @BeforeEach
@@ -52,7 +52,7 @@ public class HttpEpicHandlerTest {
 
     @AfterAll
     public static void shutDown() {
-        hts.HttpTaskServerStop();
+        hts.httpTaskServerStop();
     }
 
     @Test
