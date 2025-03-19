@@ -611,4 +611,103 @@ public class CheckTaskManager {
         }
     }
 
+    public static void fillTaskManager(TaskManager taskMgr) {
+
+        int task1Id = taskMgr.addTask(new Task("task1", "Вымыть машину", TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 03:04:05", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1)));
+        int task2Id = taskMgr.addTask(new Task("task2", "постирать чехлы сидений",
+                TaskState.IN_PROGRESS,
+                LocalDateTime.parse("2025-01-02 04:05:06", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1)));
+        int task3Id = taskMgr.addTask(new Task("task3", "переобуть колёса", TaskState.DONE,
+                LocalDateTime.parse("2025-01-02 05:06:07", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1)));
+
+        Task task4 = new Task("task4", "полировка ЛКП", TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 06:07:08", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
+        task4.setId(taskMgr.getId());
+        taskMgr.updateTask(task4);
+
+        int epic1Id = taskMgr.addEpic(new Epic("epic1", "купить продуктов"));
+
+        Subtask subtask11 = new Subtask("subtask1_1", "купить хлеба", epic1Id,
+                TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 07:08:09", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
+        int subtask11Id = taskMgr.addSubtask(subtask11);
+
+        Subtask subtask12 = new Subtask("subtask1_2", "купить молока", epic1Id,
+                TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 08:09:10", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
+        int subtask12Id = taskMgr.addSubtask(subtask12);
+
+        Subtask subtask13 = new Subtask("subtask1_3", "купить картошки", epic1Id,
+                TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 09:10:11", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
+        int subtask13Id = taskMgr.addSubtask(subtask13);
+
+        Subtask subtask14 = new Subtask("subtask1_4", "купить чай", epic1Id,
+                TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 10:11:12", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
+        int subtask14Id = taskMgr.addSubtask(subtask14);
+
+        int epic2Id = taskMgr.addEpic(new Epic("epic2", "делать уроки с детьми"));
+
+        Subtask subtask21 = new Subtask("subtask2_1", "делать алгебру", epic2Id,
+                TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 11:12:13", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
+        int subtask21Id = taskMgr.addSubtask(subtask21);
+
+        Subtask subtask22 = new Subtask("subtask2_2", "делать геометрию", epic2Id,
+                TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 12:13:14", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
+        int subtask22Id = taskMgr.addSubtask(subtask22);
+
+        Subtask subtask23 = new Subtask("subtask2_3", "делать физику", epic2Id,
+                TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 13:14:15", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
+        int subtask23Id = taskMgr.addSubtask(subtask23);
+
+        Subtask subtask24 = new Subtask("subtask2_4", "делать информатику", epic2Id,
+                TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 14:15:16", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
+        int subtask24Id = taskMgr.addSubtask(subtask24);
+
+        Subtask subtask25 = new Subtask("subtask2_5", "делать английский", epic2Id,
+                TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 15:16:17", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
+        int subtask25Id = taskMgr.addSubtask(subtask25);
+
+        int epic3Id = taskMgr.addEpic(new Epic("epic3", "поехать на дачу"));
+
+        Subtask subtask31 = new Subtask("subtask3_1", "тошнить в пробке", epic3Id,
+                TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 16:17:18", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
+        int subtask31Id = taskMgr.addSubtask(subtask31);
+
+        Subtask subtask32 = new Subtask("subtask3_2", "чистить снег", epic3Id,
+                TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 17:18:19", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
+        int subtask32Id = taskMgr.addSubtask(subtask32);
+
+        Subtask subtask33 = new Subtask("subtask3_3", "топить печку", epic3Id,
+                TaskState.NEW,
+                LocalDateTime.parse("2025-01-02 18:19:20", DateTimeFormatter.ofPattern(DATETIME_FORMAT_PATTERN)),
+                Duration.ofMinutes(1));
+        int subtask33Id = taskMgr.addSubtask(subtask33);
+
+    }
+
 }

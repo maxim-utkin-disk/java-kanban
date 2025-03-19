@@ -1,9 +1,6 @@
 package utils;
 
-import controllers.HistoryManager;
-import controllers.InMemoryHistoryManager;
-import controllers.TaskManager;
-import controllers.FileBackedTaskManager;
+import controllers.*;
 
 import java.io.File;
 
@@ -16,8 +13,8 @@ public class Managers {
         //чтобы не создавали экземпляр этого класса, использовать только статич.методы
 
     public static TaskManager getDefaultManager() {
-        //return new InMemoryTaskManager();
-        return FileBackedTaskManager.loadFromFile(new File(FILE_NAME));
+        return new InMemoryTaskManager();
+        //return FileBackedTaskManager.loadFromFile(new File(FILE_NAME));
 
     }
 
