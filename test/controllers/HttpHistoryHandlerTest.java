@@ -108,7 +108,7 @@ public class HttpHistoryHandlerTest {
                 "Наименование задачи 1 из истории из JSON отличается от наименования из кода");
         assertEquals(histTask.getDescription(), histTasksList.get(1).getDescription(),
                 "Примечание задачи 2 из истории из JSON отличается от примечания из кода");
-        assertEquals(histS2.getStartTime(), histTasksList.get(2).getStatus(),
+        assertEquals(histS2.getStatus(), histTasksList.get(2).getStatus(),
                 "Статус задачи 3 из истории из JSON отличается от статуса из кода");
     }
 
