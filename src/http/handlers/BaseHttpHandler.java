@@ -42,6 +42,7 @@ public abstract class BaseHttpHandler implements HttpHandler {
     protected void processGet(HttpExchange exchange) throws IOException {
         sendResult(exchange, 400, "Данный метод не предусмотрен");
     }
+
     protected void processPost(HttpExchange exchange) throws IOException {
         sendResult(exchange, 400, "Данный метод не предусмотрен");
     }
