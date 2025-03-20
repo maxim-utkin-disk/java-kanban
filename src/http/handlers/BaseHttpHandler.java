@@ -1,61 +1,76 @@
 package http.handlers;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import utils.DurationAdapter;
 import utils.GlobalSettings;
+import utils.LocalDateTimeAdapter;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public abstract class BaseHttpHandler implements HttpHandler {
 
-    protected void sendText(HttpExchange h, String text) throws IOException {
-        byte[] resp = text.getBytes(GlobalSettings.DEFAULT_CHARSET);
-        h.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        h.sendResponseHeaders(200, resp.length);
-        h.getResponseBody().write(resp);
-        h.close();
-    }
+    protected Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .registerTypeAdapter(Duration.class, new DurationAdapter())
+            .create();
 
-    protected void sendCreated(HttpExchange h) throws IOException {
-        h.sendResponseHeaders(201, 0);
-        h.close();
-    }
-
-    protected void sendNotFound(HttpExchange h) throws IOException {
-        h.sendResponseHeaders(404, 0);
-        h.close();
-    }
-
-    protected void sendHasInteractions(HttpExchange h) throws IOException {
-        h.sendResponseHeaders(406, 0);
-        h.close();
-    }
-
-
-    protected void sendResultWithText(HttpExchange h, int errCode, String errMsg)  {
+    protected void sendResult(HttpExchange exchange, int resCode, String resMsg)  {
         try {
-            if (!errMsg.isEmpty() || !errMsg.isBlank()) {
-                byte[] resp = errMsg.getBytes(GlobalSettings.DEFAULT_CHARSET);
-                h.getResponseHeaders().add("Content-Type", "text/plain;charset=utf-8");
-                h.sendResponseHeaders(errCode, resp.length);
-                h.getResponseBody().write(resp);
+            if (!resMsg.isEmpty() || !resMsg.isBlank()) {
+                byte[] resp = resMsg.getBytes(GlobalSettings.DEFAULT_CHARSET);
+                exchange.getResponseHeaders().add("Content-Type", "text/plain;charset=utf-8");
+                exchange.sendResponseHeaders(resCode, resp.length);
+                exchange.getResponseBody().write(resp);
             } else {
-                h.sendResponseHeaders(errCode, 0);
+                exchange.sendResponseHeaders(resCode, 0);
             }
-            h.close();
+            exchange.close();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    protected void handleInternal(HttpExchange exchange) throws IOException {
+
+    protected String[] getUriItems(HttpExchange exchange) {
+        return exchange.getRequestURI().getPath().split("/");
     }
 
-    protected void tryHandle(HttpExchange h) {
+    protected void processGet(HttpExchange exchange) throws IOException {
+        sendResult(exchange, 400, "Данный метод не предусмотрен");
+    }
+    protected void processPost(HttpExchange exchange) throws IOException {
+        sendResult(exchange, 400, "Данный метод не предусмотрен");
+    }
+
+    protected void processDelete(HttpExchange exchange) throws IOException {
+        sendResult(exchange, 400, "Данный метод не предусмотрен");
+    }
+
+    public void handle(HttpExchange exchange) throws IOException {
         try {
-            handleInternal(h);
+            String method = exchange.getRequestMethod();
+            switch (method) {
+                case "GET":
+                    processGet(exchange);
+                    break;
+                case "POST":
+                    processPost(exchange);
+                    break;
+                case "DELETE":
+                    processDelete(exchange);
+                    break;
+                default:
+                    sendResult(exchange, 400, "Данный метод не предусмотрен");
+            }
         } catch (Exception ex) {
-            sendResultWithText(h, 500, ex.getMessage());
+            sendResult(exchange, 500, ex.getMessage());
         }
+
+
     }
 
 }
