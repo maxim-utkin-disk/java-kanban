@@ -1,5 +1,8 @@
 package controllers;
 
+import exceptions.EpicNotFoundException;
+import exceptions.SubtaskNotFoundException;
+import exceptions.TaskNotFoundException;
 import exceptions.TaskTimeExecIntersectTime;
 import model.Epic;
 import model.Subtask;
@@ -56,6 +59,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTask(int taskId) {
         Task t = taskList.get(taskId);
+        if (t == null) {
+            throw new TaskNotFoundException("Задача task_id " + taskId + " не найдена");
+        }
         historyMgr.add(t);
         return t;
     }
@@ -110,6 +116,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic getEpic(int epicId) {
         Epic e = epicList.get(epicId);
+        if (e == null) {
+            throw new EpicNotFoundException("Эпик epicId= " + epicId + " не найден");
+        }
         historyMgr.add(e);
         return e;
     }
@@ -156,6 +165,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask getSubtask(int subtaskId) {
         Subtask s = subtaskList.get(subtaskId);
+        if (s == null) {
+            throw new SubtaskNotFoundException("Подзадача subtaskId= " + subtaskId + " не найдена");
+        }
         historyMgr.add(s);
         return s;
     }
